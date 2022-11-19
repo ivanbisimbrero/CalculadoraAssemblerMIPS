@@ -8,11 +8,12 @@ letraD: .byte 'D'
 letraF: .byte 'F'
 .align 4
 
-# alocar un espacio de 4 bytes al entero num1 y 4 bytes al float num2
-num1: .space 4
-num2: .space 4
+# alocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado 
+numEntero: .space 4
+numFloat: .space 4
+resultado: .space 8
 
-# cargar el mensaje que se muestra con se imprime el menú
+# cargar el mensaje que se muestra cuando se imprime el menú
 mensajeMenu: .asciiz "Programa CALCULADORA\n
 Pulse la inicial para seleccionar operación:\n
 <S>uma\n
@@ -23,62 +24,121 @@ Pulse la inicial para seleccionar operación:\n
 \n
 > "
 
-# cargar el mensaje que se muestra cuando se imprime el resultado
+# cargar los mensajes para leer el entero, el real, mensaje que se muestra para el resultado y mensaje que se muestra para cuando se introduce un dato erróneo
+mensajeEntero: .asciiz "Introduzca un valor entero: "
+mensajeFloat: .asciiz "Introduzca un valor real: "
 mensajeResultado: .asciiz "El resultado es: "
+mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO" 
 
 	.text
 	.globl main
 main:
-	li $a0 1
-	lb $t0 caracterPunto
-	jal mostrarMenu
+	la $s0 caracterPunto
+	la $s1 letraS
+        la $s2 letraR
+	la $s3 letraP
+        la $s4 letraD
+    	la $s5 letraF
+	jal menu
 	j fin
-
-cargar_menu:
-	la $s0 letraS
-        la $s1 letraR
-	la $s2 letraP
-        la $s3 letraD
-    	la $s4 letraF
-	j while
 	
-mostrar_resultado:
-	la $a0 
-mostrar_menu:  
-
+menu:  
+	# Imprimimos por pantalla las opciones
 	la $a0 mensajeMenu
 	li $v0 4
         syscall
-        #Leo caracter--> Se guarda en $a0 el caracter 
+        # Leemos el caracter introducido por el usuario
         li $v0 8
         syscall
-        #TO-DO: FUNC CALCULATOR (FIBONACCI XD Y EL RESTO TB JIJIJIJA-->USAR $a0)
-        beq $a0 $s0 suma
-        beq $a0 $s1 resta
-        beq $a0 $s2 producto
-        beq $a0 $s3 division
-        beq $a0 $s4 fibonacci
-        beq $a0 $t0 endMenu
-        j mostrarMenu
-        
+        # TO-DO funciones suma y producto del mario YJUJUJUJUJ 
+	beq $a0 $s0 endMenu
+	beq $a0 $s1 suma
+        beq $a0 $s2 resta
+        beq $a0 $s3 producto
+        beq $a0 $s4 division
+        beq $a0 $s5 fibonacci
+        j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
+
+read_int:
+	 li $a0 mensajeEntero
+	 li $v0 4
+	 syscall
+	 li $v0 5
+	 syscall
+	 sw $v0 numEntero
+
+read_float: 
+	 li $a0 mensajeFloat
+	 li $v0 4
+	 syscall
+	 li $v0 6
+	 syscall
+	 sw $v0 numFloat
+
 suma:
 	#Leer de teclado nºs que le paso + subrutina
 resta:
- 	lw $t0 num1
-	l.s $f0 num2
+ 	lw $t0 numEntero
+	l.s $f0 numFloat
 	mtc1 $t0 $f1 
 	cvt.s.w $f2 $f1
 	sub $f2 $f2 $f0
 	sw $f2 resultado
+	j mostrar_resultado
 producto:
 	#Leer de teclado nºs que le paso + subrutina
 division:
-	#Leer de teclado nºs que le paso + subrutina
+	lw $t0 numEntero
+	l.s $f0 numFloat
+	mtc1 $t0 $f1 
+	cvt.s.w $f2 $f1
+	div $f2 $f2 $f0
+	sw $f2 resultado
+	j mostrar_resultado
+
 fibonacci:
-	#Leer de teclado nºs que le paso + subrutina
+	lw $t0 numEntero
+	ble $t0 0 menu
+	jal fibo
+	sw $v0 resultado
+	j mostrar_resultado
+
+fibo_start:
+	subu $sp $sp 8
+	sw $ra ($sp)
+	sw $0 4($sp)
+	
+	move $v0 $t0 
+	ble $t0 0 mostrar_error # si es <=0 muestra un error
+	ble $t0 2 fibo_end # si es 1||2 carga un 1 como resultado y muestra el resultado
+	
+	# obtenemos n-1
+	
+	
+	# obtenemos n-2
+fibo_end:
+	li $t1 1
+	sw $t1 resultado
+	j mostrar_resultado
+	
+mostrar_error:
+	la $a0 mensajeError
+	li $v0 4
+	syscall
+	//TO-DO Mostrar el mensaje de error de forma temporal
+	j menu
+
+mostrar_resultado:
+	la $a0 mensajeResultado
+	li $v0 4
+	syscall
+	lw $a0 resultado
+	li $v0 1
+	syscall
+	j menu
+	
 end_menu:
-	jr $ra # volver a la tercera rutina de la etiqueta main
-                
+	jr $ra # volver a la tercera rutina de la etiqueta main       
                
                 
                 

@@ -106,20 +106,32 @@ fibonacci:
 fibo_start:
 	subu $sp $sp 8
 	sw $ra ($sp)
-	sw $0 4($sp)
+	sw $s6 4($sp)
 	
-	move $v0 $t0 
+	move $v0 $t0
 	ble $t0 0 mostrar_error # si es <=0 muestra un error
 	ble $t0 2 fibo_end # si es 1||2 carga un 1 como resultado y muestra el resultado
 	
 	# obtenemos n-1
-	
+	move $s6 $t0 # en el caso de que fuera un 2 se muestra como resultado un 2
+	subu $t0 $t0 1
+	jal fibo_start
 	
 	# obtenemos n-2
-fibo_end:
-	li $t1 1
-	sw $t1 resultado
+	move $t0 $s6 
+	subu $t0 $t0 2
+	move $s6 $v0
+	jal fibo_start
+	
+	# (n-1)+(n-2)
+	add $v0 $v0 $s6 
 	j mostrar_resultado
+	
+fibo_end:
+	lw $ra ($sp)
+	lw $s6 4($sp)
+	addu $sp $sp 8
+	jr $ra
 	
 mostrar_error:
 	la $a0 mensajeError

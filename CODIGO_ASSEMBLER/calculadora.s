@@ -110,7 +110,7 @@ resta:
 	jal carga_valores
 
 	# Restamos los dos floats
-	sub $f2 $f2 $f0
+	sub.s $f2 $f2 $f0
 
 	# Almacenamos el resultado
 	sw $f2 resultado
@@ -123,7 +123,7 @@ producto:
 	jal carga_valores
 
 	# Multiplicamos los dos floats
-	mult $f2 $f0 $f1
+	mult.d $f2 $f0 $f1
 
 	# Almacenamos el resultado en la dirección de memoria resultado
 	sw $f2 resultado
@@ -136,7 +136,7 @@ division:
 	jal carga_valores
 
 	# Dividimos los dos floats
-	div $f2 $f2 $f0
+	div.d $f2 $f2 $f0
 
 	# Almacenamos el resultado
 	sw $f2 resultado

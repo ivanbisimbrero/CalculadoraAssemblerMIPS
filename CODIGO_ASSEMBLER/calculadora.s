@@ -30,8 +30,9 @@ mensajeFloat: .asciiz "Introduzca un valor real: "
 mensajeResultado: .asciiz "El resultado es: "
 mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO" 
 
-	.text
-	.globl main
+.text
+.globl main
+
 main:
 	la $s0 caracterPunto
 	la $s1 letraS

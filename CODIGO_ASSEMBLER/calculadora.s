@@ -77,7 +77,7 @@ read_float:
 	 sw $v0 numFloat
 	 jr $ra
 
-suma:
+carga_valores:
 	# Leemos los valores
 	jal read_int
 	jal read_float
@@ -90,47 +90,58 @@ suma:
 	mtc1 $t0 $f1
 	cvt.s.w $f1 $f1 
 
+	jr $ra
+
+suma:
+	# Llamamos a la función que carga los valores
+	jal carga_valores
+
 	# Sumamos los dos floats
-	add.s $v0 $f0 $f1
+	add.d $f2 $f0 $f1
 
 	# Almacenamos el resultado en la dirección de memoria resultado 
-	sw $v0 resultado
+	sw $f2 resultado
+
+	# Imprimimos el resultado
+	j mostrar_resultado
 
 resta:
- 	lw $t0 numEntero
-	l.s $f0 numFloat
-	mtc1 $t0 $f1 
-	cvt.s.w $f2 $f1
+	# Llamamos a la función que carga los valores
+	jal carga_valores
+
+	# Restamos los dos floats
 	sub $f2 $f2 $f0
+
+	# Almacenamos el resultado
 	sw $f2 resultado
+
+	# Imprimimos el resultado
 	j mostrar_resultado
 
 producto:
-	# Leemos los valores
-	jal read_int
-	jal read_float
-
-	# Almacenamos valores
-	lw $t0 numEntero
-	l.s $f0 numFloat
-
-	# Pasamos el entero a float
-	mtc1 $t0 $f1
-	cvt.s.w $f1 $f1 
+	# Llamamos a la función que carga los valores
+	jal carga_valores
 
 	# Multiplicamos los dos floats
-	mult $v0 $f0 $f1
+	mult $f2 $f0 $f1
 
 	# Almacenamos el resultado en la dirección de memoria resultado
-	sw $v0 resultado
+	sw $f2 resultado
+
+	# Imprimimos el resultado
+	j mostrar_resultado
 
 division:
-	lw $t0 numEntero
-	l.s $f0 numFloat
-	mtc1 $t0 $f1 
-	cvt.s.w $f2 $f1
+	# Llamamos a la función que carga los valores
+	jal carga_valores
+
+	# Dividimos los dos floats
 	div $f2 $f2 $f0
+
+	# Almacenamos el resultado
 	sw $f2 resultado
+
+	# Imprimimos el resultado
 	j mostrar_resultado
 
 fibonacci:

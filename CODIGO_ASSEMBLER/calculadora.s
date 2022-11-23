@@ -199,10 +199,9 @@ mostrar_resultado:
 	
 end_menu:
 	jr $ra # volver a la tercera rutina de la etiqueta main       
-               
-                
-                
-fin:	li $v0 10
-		syscall
+                     
+fin:	
+	li $v0 10
+	syscall
                 
    

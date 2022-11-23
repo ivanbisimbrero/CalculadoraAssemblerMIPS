@@ -66,6 +66,7 @@ read_int:
 	 li $v0 5
 	 syscall
 	 sw $v0 numEntero
+	 jr $ra
 
 read_float: 
 	 li $a0 mensajeFloat
@@ -74,13 +75,26 @@ read_float:
 	 li $v0 6
 	 syscall
 	 sw $v0 numFloat
+	 jr $ra
 
 suma:
 	#Leer de teclado nºs que le paso + subrutina
-	li $v0, 4
-    la $a0, mensajeEntero
-    syscall
+	jal read_int
+	jal read_float
 
+	#Sumar
+	lw $t0 numEntero
+	l.s $f0 numFloat
+
+	# Pasamos el entero a float
+	mtc1 $t0 $f1
+	cvt.s.w $f1 $f1 
+
+	# Sumamos los dos floats
+	add.s $v0 $f0 $f1
+
+	# Almacenamos el resultado en la dirección de memoria resultado 
+	sw $v0 resultado
 
 resta:
  	lw $t0 numEntero

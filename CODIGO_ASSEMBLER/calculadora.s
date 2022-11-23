@@ -77,6 +77,11 @@ read_float:
 
 suma:
 	#Leer de teclado nºs que le paso + subrutina
+	li $v0, 4
+    la $a0, mensajeEntero
+    syscall
+
+
 resta:
  	lw $t0 numEntero
 	l.s $f0 numFloat

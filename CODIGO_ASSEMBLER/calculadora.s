@@ -78,6 +78,7 @@ read_float:
 	 jr $ra
 
 suma:
+	# Leemos los valores
 	jal read_int
 	jal read_float
 

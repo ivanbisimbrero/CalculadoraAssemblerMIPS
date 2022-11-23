@@ -78,11 +78,10 @@ read_float:
 	 jr $ra
 
 suma:
-	#Leer de teclado nºs que le paso + subrutina
 	jal read_int
 	jal read_float
 
-	#Sumar
+	# Almacenamos valores
 	lw $t0 numEntero
 	l.s $f0 numFloat
 
@@ -104,8 +103,26 @@ resta:
 	sub $f2 $f2 $f0
 	sw $f2 resultado
 	j mostrar_resultado
+
 producto:
-	#Leer de teclado nºs que le paso + subrutina
+	# Leemos los valores
+	jal read_int
+	jal read_float
+
+	# Almacenamos valores
+	lw $t0 numEntero
+	l.s $f0 numFloat
+
+	# Pasamos el entero a float
+	mtc1 $t0 $f1
+	cvt.s.w $f1 $f1 
+
+	# Multiplicamos los dos floats
+	mult $v0 $f0 $f1
+
+	# Almacenamos el resultado en la dirección de memoria resultado
+	sw $v0 resultado
+
 division:
 	lw $t0 numEntero
 	l.s $f0 numFloat

@@ -1,12 +1,13 @@
 	.data
 # cargar caracteres que debe introducir el usuario
-caracterPunto: .byte '.'
+caracterPunto: .asciiz ".\n"
 letraS: .byte 'S'
 letraR: .byte 'R'
 letraP: .byte 'P'
 letraD: .byte 'D'
 letraF: .byte 'F'
-caracterUsuario: .space 1
+comment: .asciiz "Nacho\n"
+.align 4
 
 
 # alocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado 
@@ -34,7 +35,6 @@ mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO"
 	.text
 	.globl main
 main:
-	la $s0 caracterPunto
 	la $s1 letraS
     la $s2 letraR
 	la $s3 letraP
@@ -45,59 +45,108 @@ main:
 	
 menu:  
 	# Imprimimos por pantalla las opciones
+	la $t6 caracterPunto
+	lh $s0 ($t6)
 	la $a0 mensajeMenu
 	li $v0 4
     syscall
     # Leemos el caracter introducido por el usuario
-    li $a1 1 #Ponemos longitud 1 para leer la cadena
-    la $a0 caracterUsuario
+    li $a1 5
     li $v0 8
     syscall
+	lh $t7 ($a0)
     # TO-DO funciones suma y producto del mario YJUJUJUJUJ
-    la $t7 caracterUsuario
-    beq $t7 $s0 endMenu
-    beq $t7 $s1 suma
-    beq $t7 $s2 resta
-    beq $t7 $s3 producto
-    beq $t7 $s4 division
-    beq $t7 $s5 fibonacci
+	beq $a0 $s0 endMenu
+	beq $a0 $s1 suma
+    beq $a0 $s2 resta
+    beq $a0 $s3 producto
+    beq $a0 $s4 division
+    beq $a0 $s5 fibonacci
     j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
 read_int:
-	 la $a0 mensajeEntero
-	 li $v0 4
-	 syscall
-	 li $v0 5
-	 syscall
-	 sw $v0 numEntero
+    la $a0 mensajeEntero
+    li $v0 4
+    syscall
+    li $v0 5
+    syscall
+    sw $v0 numEntero
+    jr $ra
 
 read_float: 
-	 la $a0 mensajeFloat
-	 li $v0 4
-	 syscall
-	 li $v0 6
-	 syscall
-	 sw $v0 numFloat
+    la $a0 mensajeFloat
+    li $v0 4
+    syscall
+    li $v0 6
+    syscall
+    sw $v0 numFloat
+    jr $ra
 
-suma:
-	#Leer de teclado nºs que le paso + subrutina
-resta:
- 	lw $t0 numEntero
-	l.s $f0 numFloat
-	mtc1 $t0 $f1 
-	cvt.s.w $f2 $f1
-	sub $f2 $f2 $f0
-	sw $f2 resultado
-	j mostrar_resultado
-producto:
-	#Leer de teclado nºs que le paso + subrutina
-division:
+carga_valores:
+	# Leemos los valores
+	jal read_int
+	jal read_float
+
+	# Almacenamos valores
 	lw $t0 numEntero
 	l.s $f0 numFloat
-	mtc1 $t0 $f1 
-	cvt.s.w $f2 $f1
-	div $f2 $f2 $f0
+
+	# Pasamos el entero a float
+	mtc1 $t0 $f1
+	cvt.s.w $f1 $f1 
+
+	jr $ra
+
+suma:
+	# Llamamos a la función que carga los valores
+	jal carga_valores
+
+	# Sumamos los dos floats
+	add.d $f2 $f0 $f1
+
+	# Almacenamos el resultado en la dirección de memoria resultado 
 	sw $f2 resultado
+
+	# Imprimimos el resultado
+	j mostrar_resultado
+
+resta:
+	# Llamamos a la función que carga los valores
+	jal carga_valores
+
+	# Restamos los dos floats
+	sub.s $f2 $f2 $f0
+
+	# Almacenamos el resultado
+	sw $f2 resultado
+
+	# Imprimimos el resultado
+	j mostrar_resultado
+
+producto:
+	# Llamamos a la función que carga los valores
+	jal carga_valores
+
+	# Multiplicamos los dos floats
+	mult.d $f2 $f0 $f1
+
+	# Almacenamos el resultado en la dirección de memoria resultado
+	sw $f2 resultado
+
+	# Imprimimos el resultado
+	j mostrar_resultado
+
+division:
+	# Llamamos a la función que carga los valores
+	jal carga_valores
+
+	# Dividimos los dos floats
+	div.d $f2 $f2 $f0
+
+	# Almacenamos el resultado
+	sw $f2 resultado
+
+	# Imprimimos el resultado
 	j mostrar_resultado
 
 fibonacci:
@@ -155,10 +204,9 @@ mostrar_resultado:
 	
 end_menu:
 	jr $ra # volver a la tercera rutina de la etiqueta main       
-               
-                
-                
-fin:	li $v0 10
-		syscall
+                     
+fin:	
+	li $v0 10
+	syscall
                 
    

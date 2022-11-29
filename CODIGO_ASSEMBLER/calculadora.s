@@ -61,7 +61,7 @@ menu:
         j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
 read_int:
-	 li $a0 mensajeEntero
+	 la $a0 mensajeEntero
 	 li $v0 4
 	 syscall
 	 li $v0 5
@@ -70,7 +70,7 @@ read_int:
 	 jr $ra
 
 read_float: 
-	 li $a0 mensajeFloat
+	 la $a0 mensajeFloat
 	 li $v0 4
 	 syscall
 	 li $v0 6

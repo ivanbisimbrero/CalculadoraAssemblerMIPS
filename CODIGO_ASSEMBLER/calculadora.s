@@ -6,7 +6,8 @@ letraR: .byte 'R'
 letraP: .byte 'P'
 letraD: .byte 'D'
 letraF: .byte 'F'
-.align 4
+caracterUsuario: .space 1
+
 
 # alocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado 
 numEntero: .space 4
@@ -35,10 +36,10 @@ mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO"
 main:
 	la $s0 caracterPunto
 	la $s1 letraS
-        la $s2 letraR
+    la $s2 letraR
 	la $s3 letraP
-        la $s4 letraD
-    	la $s5 letraF
+    la $s4 letraD
+    la $s5 letraF
 	jal menu
 	j fin
 	
@@ -46,21 +47,24 @@ menu:
 	# Imprimimos por pantalla las opciones
 	la $a0 mensajeMenu
 	li $v0 4
-        syscall
-        # Leemos el caracter introducido por el usuario
-        li $v0 8
-        syscall
-        # TO-DO funciones suma y producto del mario YJUJUJUJUJ 
-	beq $a0 $s0 endMenu
-	beq $a0 $s1 suma
-        beq $a0 $s2 resta
-        beq $a0 $s3 producto
-        beq $a0 $s4 division
-        beq $a0 $s5 fibonacci
-        j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
+    syscall
+    # Leemos el caracter introducido por el usuario
+    li $a1 1 #Ponemos longitud 1 para leer la cadena
+    la $a0 caracterUsuario
+    li $v0 8
+    syscall
+    # TO-DO funciones suma y producto del mario YJUJUJUJUJ
+    la $t7 caracterUsuario
+    beq $t7 $s0 endMenu
+    beq $t7 $s1 suma
+    beq $t7 $s2 resta
+    beq $t7 $s3 producto
+    beq $t7 $s4 division
+    beq $t7 $s5 fibonacci
+    j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
 read_int:
-	 li $a0 mensajeEntero
+	 la $a0 mensajeEntero
 	 li $v0 4
 	 syscall
 	 li $v0 5
@@ -68,7 +72,7 @@ read_int:
 	 sw $v0 numEntero
 
 read_float: 
-	 li $a0 mensajeFloat
+	 la $a0 mensajeFloat
 	 li $v0 4
 	 syscall
 	 li $v0 6

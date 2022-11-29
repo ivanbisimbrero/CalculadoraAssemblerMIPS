@@ -6,9 +6,7 @@ letraR: .byte 'R'
 letraP: .byte 'P'
 letraD: .byte 'D'
 letraF: .byte 'F'
-comment: .asciiz "Nacho\n"
-.align 4
-
+# no tenemos que utilizar la función .align ya que el total de bytes utilizado para guardar los chars es de 8 bytes y la siguiente dirección en la que se guarda el próximo dato es múltiplo de 4
 
 # alocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado 
 numEntero: .space 4
@@ -35,18 +33,20 @@ mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO"
 	.text
 	.globl main
 main:
+    # Cargamos los distintos valores para
+    la $t6 caracterPunto
+    lh $s0 ($t6)
 	la $s1 letraS
     la $s2 letraR
 	la $s3 letraP
     la $s4 letraD
     la $s5 letraF
+    # Llamamos a la rutina menu para empezar a mostrar la pantalla del menú
 	jal menu
 	j fin
 	
 menu:  
 	# Imprimimos por pantalla las opciones
-	la $t6 caracterPunto
-	lh $s0 ($t6)
 	la $a0 mensajeMenu
 	li $v0 4
     syscall
@@ -55,7 +55,7 @@ menu:
     li $v0 8
     syscall
 	lh $t7 ($a0)
-    # TO-DO funciones suma y producto del mario YJUJUJUJUJ
+    # Comparar el valor del caracter introducido por el usuario
 	beq $a0 $s0 endMenu
 	beq $a0 $s1 suma
     beq $a0 $s2 resta

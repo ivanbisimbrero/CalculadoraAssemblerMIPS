@@ -25,6 +25,7 @@ Pulse la inicial para seleccionar operación:\n
 > "
 
 # cargar los mensajes para leer el entero, el real, mensaje que se muestra para el resultado y mensaje que se muestra para cuando se introduce un dato erróneo
+# cargamos como resultado un double ya que la suma de 2 floats podría producir un desbordamiento al almacenarlo en otro float
 mensajeEntero: .asciiz "Introduzca un valor entero: "
 mensajeFloat: .asciiz "Introduzca un valor real: "
 mensajeResultado: .asciiz "El resultado es: "

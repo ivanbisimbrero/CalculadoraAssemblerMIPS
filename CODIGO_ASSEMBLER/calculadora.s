@@ -47,36 +47,36 @@ menu:
 	# Imprimimos por pantalla las opciones
 	la $a0 mensajeMenu
 	li $v0 4
-        syscall
-        # Leemos el caracter introducido por el usuario
-        li $v0 8
-        syscall
-        # TO-DO funciones suma y producto del mario YJUJUJUJUJ 
+    syscall
+    # Leemos el caracter introducido por el usuario
+    li $v0 8
+    syscall
+    # TO-DO funciones suma y producto del mario YJUJUJUJUJ
 	beq $a0 $s0 endMenu
-	beq $a0 $s1 suma
-        beq $a0 $s2 resta
-        beq $a0 $s3 producto
-        beq $a0 $s4 division
-        beq $a0 $s5 fibonacci
-        j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
+	beq $a0 $s1
+    beq $a0 $s2 resta
+    beq $a0 $s3 producto
+    beq $a0 $s4 division
+    beq $a0 $s5 fibonacci
+    j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
 read_int:
-	 la $a0 mensajeEntero
-	 li $v0 4
-	 syscall
-	 li $v0 5
-	 syscall
-	 sw $v0 numEntero
-	 jr $ra
+    la $a0 mensajeEntero
+    li $v0 4
+    syscall
+    li $v0 5
+    syscall
+    sw $v0 numEntero
+    jr $ra
 
 read_float: 
-	 la $a0 mensajeFloat
-	 li $v0 4
-	 syscall
-	 li $v0 6
-	 syscall
-	 sw $v0 numFloat
-	 jr $ra
+    la $a0 mensajeFloat
+    li $v0 4
+    syscall
+    li $v0 6
+    syscall
+    sw $v0 numFloat
+    jr $ra
 
 carga_valores:
 	# Leemos los valores

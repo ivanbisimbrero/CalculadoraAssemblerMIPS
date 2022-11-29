@@ -36,10 +36,10 @@ mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO"
 main:
 	la $s0 caracterPunto
 	la $s1 letraS
-        la $s2 letraR
+    la $s2 letraR
 	la $s3 letraP
-        la $s4 letraD
-    	la $s5 letraF
+    la $s4 letraD
+    la $s5 letraF
 	jal menu
 	j fin
 	

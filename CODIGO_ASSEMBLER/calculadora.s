@@ -56,7 +56,7 @@ menu:
     syscall
 	lh $t7 ($a0)
     # TO-DO funciones suma y producto del mario YJUJUJUJUJ
-	beq $a0 $s0 endMenu
+	beq $t7 $s0 endMenu
 	beq $a0 $s1 suma
     beq $a0 $s2 resta
     beq $a0 $s3 producto

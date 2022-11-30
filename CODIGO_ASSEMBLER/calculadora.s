@@ -1,4 +1,5 @@
-	.data
+	.data 
+	prueba
 # cargar caracteres que debe introducir el usuario
 caracterPunto: .asciiz ".\n"
 letraS: .byte 'S'

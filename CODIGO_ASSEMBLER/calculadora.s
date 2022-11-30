@@ -116,7 +116,7 @@ suma:
 	jal carga_valores
 
 	# Sumamos los dos floats
-	add.d $f2 $f0 $f1
+	add.s $f2 $f0 $f1
 
 	# Almacenamos el resultado en la dirección de memoria resultado 
     mfc1 $t1 $f2
@@ -144,7 +144,7 @@ producto:
 	jal carga_valores
 
 	# Multiplicamos los dos floats
-	mult.d $f2 $f0 $f1
+	mul.s $f2 $f0 $f1
 
 	# Almacenamos el resultado en la dirección de memoria resultado
     mfc1 $t1 $f2
@@ -158,7 +158,7 @@ division:
 	jal carga_valores
 
 	# Dividimos los dos floats
-	div.d $f2 $f2 $f0
+	div.s $f2 $f2 $f0
 
 	# Almacenamos el resultado
     mfc1 $t1 $f2

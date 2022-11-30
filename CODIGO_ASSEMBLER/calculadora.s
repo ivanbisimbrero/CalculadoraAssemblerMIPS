@@ -68,7 +68,7 @@ menu:
     syscall
 	lh $t7 ($a0)
     # Comparar el valor del caracter introducido por el usuario
-	beq $t7 $s0 endMenu
+	beq $t7 $s0 end_Menu
 	beq $t7 $s1 suma
     beq $t7 $s2 resta
     beq $t7 $s3 producto
@@ -218,7 +218,7 @@ mostrar_resultado:
 	syscall
 	j menu
 	
-end_menu:
+end_Menu:
 	jr $ra # volver a la tercera rutina de la etiqueta main       
                      
 fin:	

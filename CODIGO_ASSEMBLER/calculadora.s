@@ -1,4 +1,4 @@
-	.data
+	.data 
 # cargar caracteres que debe introducir el usuario
 caracterPunto: .asciiz ".\n"
 letraS: .byte 'S'
@@ -8,7 +8,7 @@ letraD: .byte 'D'
 letraF: .byte 'F'
 # no tenemos que utilizar la función .align ya que el total de bytes utilizado para guardar los chars es de 8 bytes y la siguiente dirección en la que se guarda el próximo dato es múltiplo de 4
 
-# alocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado 
+# colocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado 
 numEntero: .space 4
 numFloat: .space 4
 resultado: .space 8
@@ -36,6 +36,12 @@ main:
     # Cargamos los distintos valores para
     la $t6 caracterPunto
     lh $s0 ($t6)
+	# Epilogo
+	sub $sp, $sp, 24 
+	sw $ra, 4($sp) 
+	sw $a0, 20($sp)
+
+	# Cuerpo
 	la $s1 letraS
     la $s2 letraR
 	la $s3 letraP
@@ -44,6 +50,12 @@ main:
     # Llamamos a la rutina menu para empezar a mostrar la pantalla del menú
 	jal menu
 	j fin
+
+	# Prologo
+	lw $ra, 4($sp) 
+	lw $a0, 20($sp) 
+	add $sp, $sp, 24
+
 	
 menu:  
 	# Imprimimos por pantalla las opciones

@@ -68,8 +68,6 @@ menu:
     syscall
 	lh $t7 ($a0)
     # Comparar el valor del caracter introducido por el usuario
-	beq $a0 $s0 endMenu
-    # TO-DO funciones suma y producto del mario YJUJUJUJUJ
 	beq $t7 $s0 endMenu
 	beq $t7 $s1 suma
     beq $t7 $s2 resta

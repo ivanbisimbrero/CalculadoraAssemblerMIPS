@@ -187,7 +187,11 @@ fibo_end:
 	lw $s6 4($sp)
 	addu $sp $sp 8
 	jr $ra
-	
+
+guardar_resultado:
+    mfc1.d $t
+    sw $f2 resultado
+
 mostrar_error:
 	la $a0 mensajeError
 	li $v0 4

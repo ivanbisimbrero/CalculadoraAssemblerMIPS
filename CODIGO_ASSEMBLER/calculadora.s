@@ -219,6 +219,10 @@ mostrar_resultado:
 	j menu
 	
 end_Menu:
+    #Mostramos el mensaje de fin de programa
+    la $a0 coment
+    li $v0 4
+    syscall
 	jr $ra # volver a la tercera rutina de la etiqueta main       
                      
 fin:	

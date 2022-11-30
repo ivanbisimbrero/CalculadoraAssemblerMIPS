@@ -71,11 +71,11 @@ menu:
 	beq $a0 $s0 endMenu
     # TO-DO funciones suma y producto del mario YJUJUJUJUJ
 	beq $t7 $s0 endMenu
-	beq $a0 $s1 suma
-    beq $a0 $s2 resta
-    beq $a0 $s3 producto
-    beq $a0 $s4 division
-    beq $a0 $s5 fibonacci
+	beq $t7 $s1 suma
+    beq $t7 $s2 resta
+    beq $t7 $s3 producto
+    beq $t7 $s4 division
+    beq $t7 $s5 fibonacci
     j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
 read_int:
@@ -119,7 +119,8 @@ suma:
 	add.d $f2 $f0 $f1
 
 	# Almacenamos el resultado en la dirección de memoria resultado 
-	sw $f2 resultado
+    mfc1 $t1 $f2
+    sw $t1 resultado
 
 	# Imprimimos el resultado
 	j mostrar_resultado
@@ -132,7 +133,8 @@ resta:
 	sub.s $f2 $f2 $f0
 
 	# Almacenamos el resultado
-	sw $f2 resultado
+    mfc1 $t1 $f2
+    sw $t1 resultado
 
 	# Imprimimos el resultado
 	j mostrar_resultado
@@ -145,7 +147,8 @@ producto:
 	mult.d $f2 $f0 $f1
 
 	# Almacenamos el resultado en la dirección de memoria resultado
-	sw $f2 resultado
+    mfc1 $t1 $f2
+    sw $t1 resultado
 
 	# Imprimimos el resultado
 	j mostrar_resultado
@@ -158,7 +161,8 @@ division:
 	div.d $f2 $f2 $f0
 
 	# Almacenamos el resultado
-	sw $f2 resultado
+    mfc1 $t1 $f2
+    sw $t1 resultado
 
 	# Imprimimos el resultado
 	j mostrar_resultado
@@ -199,10 +203,6 @@ fibo_end:
 	lw $s6 4($sp)
 	addu $sp $sp 8
 	jr $ra
-
-guardar_resultado:
-    mfc1.d $t
-    sw $f2 resultado
 
 mostrar_error:
 	la $a0 mensajeError

@@ -29,7 +29,7 @@ mensajeEntero: .asciiz "Introduzca un valor entero: "
 mensajeFloat: .asciiz "Introduzca un valor real: "
 mensajeResultado: .asciiz "El resultado es: "
 mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO"
-coment:.asciiz "FIN DE PROGRAMA\n"
+comment:.asciiz "FIN DE PROGRAMA\n"
 
 	.text
 	.globl main
@@ -225,7 +225,7 @@ mostrar_resultado:
 	
 end_Menu:
     #Mostramos el mensaje de fin de programa
-    la $a0 coment
+    la $a0 comment
     li $v0 4
     syscall
 	jr $ra # volver a la tercera rutina de la etiqueta main       

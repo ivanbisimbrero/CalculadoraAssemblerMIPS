@@ -1,11 +1,6 @@
 	.data 
-# cargar caracteres que debe introducir el usuario
-caracterPunto: .asciiz ".\n"
-letraS: .asciiz "S\n"
-letraR: .asciiz "R\n"
-letraP: .asciiz "P\n"
-letraD: .asciiz "D\n"
-letraF: .asciiz "F\n"
+# Reservamos el buffer del usuario
+buffer: .space 10
 # no tenemos que utilizar la función .align ya que el total de bytes utilizado para guardar los chars es de 8 bytes y la siguiente dirección en la que se guarda el próximo dato es múltiplo de 4
 
 # colocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado 
@@ -35,18 +30,6 @@ coment:.asciiz "FIN DE PROGRAMA\n"
 	.globl main
 main:
     # Cargamos los distintos valores para
-    la $t6 caracterPunto
-    lh $s0 ($t6)
-    la $t6 letraS
-    lh $s1 ($t6)
-    la $t6 letraR
-    lh $s2 ($t6)
-    la $t6 letraP
-    lh $s3 ($t6)
-    la $t6 letraD
-    lh $s4 ($t6)
-    la $t6 letraF
-    lh $s5 ($t6)
 	# Epilogo
 	sub $sp, $sp, 24 
 	sw $ra, 4($sp) 
@@ -68,17 +51,18 @@ menu:
 	li $v0 4
     syscall
     # Leemos el caracter introducido por el usuario
+    la $a0 buffer
     li $a1 5
     li $v0 8
     syscall
-	lh $t7 ($a0)
+	lb $t7 buffer
     # Comparar el valor del caracter introducido por el usuario
-	beq $t7 $s0 end_Menu
-	beq $t7 $s1 suma
-    beq $t7 $s2 resta
-    beq $t7 $s3 producto
-    beq $t7 $s4 division
-    beq $t7 $s5 fibonacci
+    beq $t7 '.' end_Menu
+	beq $t7 'S' suma
+    beq $t7 'R' resta
+    beq $t7 'P' producto
+    beq $t7 'D' division
+    beq $t7 'F' fibonacci
     j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
 read_int:

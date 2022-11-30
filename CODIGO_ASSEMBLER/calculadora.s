@@ -1,11 +1,11 @@
 	.data
 # cargar caracteres que debe introducir el usuario
 caracterPunto: .asciiz ".\n"
-letraS: .byte 'S'
-letraR: .byte 'R'
-letraP: .byte 'P'
-letraD: .byte 'D'
-letraF: .byte 'F'
+letraS: .asciiz "S\n"
+letraR: .asciiz "R\n"
+letraP: .asciiz "P\n"
+letraD: .asciiz "D\n"
+letraF: .asciiz "F\n"
 comment: .asciiz "Nacho\n"
 .align 4
 
@@ -35,16 +35,16 @@ mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO"
 	.text
 	.globl main
 main:
-	la $s1 letraS
-    la $s2 letraR
-	la $s3 letraP
-    la $s4 letraD
-    la $s5 letraF
 	jal menu
 	j fin
 	
 menu:  
 	# Imprimimos por pantalla las opciones
+    la $t2 letraS
+    la $t3 letraR
+    la $t4 letraP
+    la $t5 letraD
+    la $t7 letraF
 	la $t6 caracterPunto
 	lh $s0 ($t6)
 	la $a0 mensajeMenu
@@ -57,11 +57,11 @@ menu:
 	lh $t7 ($a0)
     # TO-DO funciones suma y producto del mario YJUJUJUJUJ
 	beq $t7 $s0 endMenu
-	beq $a0 $s1 suma
-    beq $a0 $s2 resta
-    beq $a0 $s3 producto
-    beq $a0 $s4 division
-    beq $a0 $s5 fibonacci
+	beq $t7 $s1 suma
+    beq $t7 $s2 resta
+    beq $t7 $s3 producto
+    beq $t7 $s4 division
+    beq $t7 $s5 fibonacci
     j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
 read_int:
@@ -105,7 +105,8 @@ suma:
 	add.d $f2 $f0 $f1
 
 	# Almacenamos el resultado en la dirección de memoria resultado 
-	sw $f2 resultado
+	mfc1 $t1 $f2
+    sw $t1 resultado
 
 	# Imprimimos el resultado
 	j mostrar_resultado
@@ -118,7 +119,8 @@ resta:
 	sub.s $f2 $f2 $f0
 
 	# Almacenamos el resultado
-	sw $f2 resultado
+    mfc1 $t1 $f2
+    sw $t1 resultado
 
 	# Imprimimos el resultado
 	j mostrar_resultado
@@ -128,10 +130,11 @@ producto:
 	jal carga_valores
 
 	# Multiplicamos los dos floats
-	mult.d $f2 $f0 $f1
+	mul.s $f2 $f0 $f1
 
 	# Almacenamos el resultado en la dirección de memoria resultado
-	sw $f2 resultado
+    mfc1 $t1 $f2
+    sw $t1 resultado
 
 	# Imprimimos el resultado
 	j mostrar_resultado
@@ -141,10 +144,11 @@ division:
 	jal carga_valores
 
 	# Dividimos los dos floats
-	div.d $f2 $f2 $f0
+	div.s $f2 $f2 $f0
 
 	# Almacenamos el resultado
-	sw $f2 resultado
+    mfc1 $t1 $f2
+    sw $t1 resultado
 
 	# Imprimimos el resultado
 	j mostrar_resultado
@@ -190,7 +194,7 @@ mostrar_error:
 	la $a0 mensajeError
 	li $v0 4
 	syscall
-	//TO-DO Mostrar el mensaje de error de forma temporal
+	#TO-DO Mostrar el mensaje de error de forma temporal
 	j menu
 
 mostrar_resultado:

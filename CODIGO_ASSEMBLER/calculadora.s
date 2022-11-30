@@ -1,16 +1,14 @@
-	.data
+	.data 
 # cargar caracteres que debe introducir el usuario
 caracterPunto: .asciiz ".\n"
-letraS: .asciiz "S\n"
-letraR: .asciiz "R\n"
-letraP: .asciiz "P\n"
-letraD: .asciiz "D\n"
-letraF: .asciiz "F\n"
-comment: .asciiz "Nacho\n"
-.align 4
+letraS: .byte 'S'
+letraR: .byte 'R'
+letraP: .byte 'P'
+letraD: .byte 'D'
+letraF: .byte 'F'
+# no tenemos que utilizar la función .align ya que el total de bytes utilizado para guardar los chars es de 8 bytes y la siguiente dirección en la que se guarda el próximo dato es múltiplo de 4
 
-
-# alocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado 
+# colocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado 
 numEntero: .space 4
 numFloat: .space 4
 resultado: .space 8
@@ -35,18 +33,32 @@ mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO"
 	.text
 	.globl main
 main:
+    # Cargamos los distintos valores para
+    la $t6 caracterPunto
+    lh $s0 ($t6)
+	# Epilogo
+	sub $sp, $sp, 24 
+	sw $ra, 4($sp) 
+	sw $a0, 20($sp)
+
+	# Cuerpo
+	la $s1 letraS
+    la $s2 letraR
+	la $s3 letraP
+    la $s4 letraD
+    la $s5 letraF
+    # Llamamos a la rutina menu para empezar a mostrar la pantalla del menú
 	jal menu
 	j fin
+
+	# Prologo
+	lw $ra, 4($sp) 
+	lw $a0, 20($sp) 
+	add $sp, $sp, 24
+
 	
 menu:  
 	# Imprimimos por pantalla las opciones
-    la $t2 letraS
-    la $t3 letraR
-    la $t4 letraP
-    la $t5 letraD
-    la $t7 letraF
-	la $t6 caracterPunto
-	lh $s0 ($t6)
 	la $a0 mensajeMenu
 	li $v0 4
     syscall
@@ -55,13 +67,15 @@ menu:
     li $v0 8
     syscall
 	lh $t7 ($a0)
+    # Comparar el valor del caracter introducido por el usuario
+	beq $a0 $s0 endMenu
     # TO-DO funciones suma y producto del mario YJUJUJUJUJ
 	beq $t7 $s0 endMenu
-	beq $t7 $s1 suma
-    beq $t7 $s2 resta
-    beq $t7 $s3 producto
-    beq $t7 $s4 division
-    beq $t7 $s5 fibonacci
+	beq $a0 $s1 suma
+    beq $a0 $s2 resta
+    beq $a0 $s3 producto
+    beq $a0 $s4 division
+    beq $a0 $s5 fibonacci
     j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
 read_int:
@@ -105,8 +119,7 @@ suma:
 	add.d $f2 $f0 $f1
 
 	# Almacenamos el resultado en la dirección de memoria resultado 
-	mfc1 $t1 $f2
-    sw $t1 resultado
+	sw $f2 resultado
 
 	# Imprimimos el resultado
 	j mostrar_resultado
@@ -119,8 +132,7 @@ resta:
 	sub.s $f2 $f2 $f0
 
 	# Almacenamos el resultado
-    mfc1 $t1 $f2
-    sw $t1 resultado
+	sw $f2 resultado
 
 	# Imprimimos el resultado
 	j mostrar_resultado
@@ -130,11 +142,10 @@ producto:
 	jal carga_valores
 
 	# Multiplicamos los dos floats
-	mul.s $f2 $f0 $f1
+	mult.d $f2 $f0 $f1
 
 	# Almacenamos el resultado en la dirección de memoria resultado
-    mfc1 $t1 $f2
-    sw $t1 resultado
+	sw $f2 resultado
 
 	# Imprimimos el resultado
 	j mostrar_resultado
@@ -144,11 +155,10 @@ division:
 	jal carga_valores
 
 	# Dividimos los dos floats
-	div.s $f2 $f2 $f0
+	div.d $f2 $f2 $f0
 
 	# Almacenamos el resultado
-    mfc1 $t1 $f2
-    sw $t1 resultado
+	sw $f2 resultado
 
 	# Imprimimos el resultado
 	j mostrar_resultado
@@ -189,12 +199,16 @@ fibo_end:
 	lw $s6 4($sp)
 	addu $sp $sp 8
 	jr $ra
-	
+
+guardar_resultado:
+    mfc1.d $t
+    sw $f2 resultado
+
 mostrar_error:
 	la $a0 mensajeError
 	li $v0 4
 	syscall
-	#TO-DO Mostrar el mensaje de error de forma temporal
+	//TO-DO Mostrar el mensaje de error de forma temporal
 	j menu
 
 mostrar_resultado:

@@ -28,7 +28,8 @@ Pulse la inicial para seleccionar operación:\n
 mensajeEntero: .asciiz "Introduzca un valor entero: "
 mensajeFloat: .asciiz "Introduzca un valor real: "
 mensajeResultado: .asciiz "El resultado es: "
-mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO" 
+mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO"
+coment:.asciiz "FIN DE PROGRAMA\n"
 
 	.text
 	.globl main
@@ -228,5 +229,3 @@ end_Menu:
 fin:	
 	li $v0 10
 	syscall
-                
-   

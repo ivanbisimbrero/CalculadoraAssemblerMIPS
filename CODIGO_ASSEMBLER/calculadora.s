@@ -37,21 +37,17 @@ main:
     # Cargamos los distintos valores para
     la $t6 caracterPunto
     lh $s0 ($t6)
-    la $t6 letraS
-    lh $s1 ($t6)
-    la $t6 letraR
-    lh $s2 ($t6)
-    la $t6 letraP
-    lh $s2 ($t6)
-    la $t6 letraD
-    lh $s2 ($t6)
-    la $t6 letraF
-    lh $s2 ($t6)
 	# Epilogo
 	sub $sp, $sp, 24 
 	sw $ra, 4($sp) 
 	sw $a0, 20($sp)
 
+	# Cuerpo
+	la $s1 letraS
+    la $s2 letraR
+	la $s3 letraP
+    la $s4 letraD
+    la $s5 letraF
     # Llamamos a la rutina menu para empezar a mostrar la pantalla del menú
 	jal menu
 	j fin

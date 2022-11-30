@@ -208,7 +208,7 @@ mostrar_error:
 	la $a0 mensajeError
 	li $v0 4
 	syscall
-	//TO-DO Mostrar el mensaje de error de forma temporal
+	#TO-DO Mostrar el mensaje de error de forma temporal
 	j menu
 
 mostrar_resultado:

@@ -35,9 +35,12 @@ mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO"
 	.text
 	.globl main
 main:
+	# Epilogo
 	sub $sp, $sp, 24 
 	sw $ra, 4($sp) 
 	sw $a0, 20($sp)
+
+	# Cuerpo
 	la $s1 letraS
     la $s2 letraR
 	la $s3 letraP
@@ -45,6 +48,12 @@ main:
     la $s5 letraF
 	jal menu
 	j fin
+
+	# Prologo
+	lw $ra, 4($sp) 
+	lw $a0, 20($sp) 
+	add $sp, $sp, 24
+
 	
 menu:  
 	# Imprimimos por pantalla las opciones

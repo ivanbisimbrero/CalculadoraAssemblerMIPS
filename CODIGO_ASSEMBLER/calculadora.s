@@ -1,11 +1,11 @@
 	.data 
 # cargar caracteres que debe introducir el usuario
 caracterPunto: .asciiz ".\n"
-letraS: .byte 'S'
-letraR: .byte 'R'
-letraP: .byte 'P'
-letraD: .byte 'D'
-letraF: .byte 'F'
+letraS: .asciiz "S\n"
+letraR: .asciiz "R\n"
+letraP: .asciiz "P\n"
+letraD: .asciiz "D\n"
+letraF: .asciiz "F\n"
 # no tenemos que utilizar la función .align ya que el total de bytes utilizado para guardar los chars es de 8 bytes y la siguiente dirección en la que se guarda el próximo dato es múltiplo de 4
 
 # colocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado 

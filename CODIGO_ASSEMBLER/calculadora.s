@@ -10,7 +10,7 @@ comment: .asciiz "Nacho\n"
 .align 4
 
 
-# alocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado 
+# colocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado 
 numEntero: .space 4
 numFloat: .space 4
 resultado: .space 8
@@ -35,6 +35,9 @@ mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO"
 	.text
 	.globl main
 main:
+	sub $sp, $sp, 24 
+	sw $ra, 4($sp) 
+	sw $a0, 20($sp)
 	la $s1 letraS
     la $s2 letraR
 	la $s3 letraP

@@ -92,31 +92,39 @@ read_float:
 
     #Funcion para que cargue los valores
 carga_valores:
-    # Leemos los valores
-    sw $ra ($sp)
-    jal read_int
-    jal read_float
-    lw $ra ($sp)
-    # Almacenamos valores
-    lw $t0 numEntero
-    # Pasamos el entero a float
-    mtc1 $t0 $f1
-    cvt.s.w $f1 $f1
-    jr $ra
+	# Leemos los valores
+	#Metemos en la pila la direccion de memoria de esta funcion
+	subu $sp $sp 4
+	sw $ra ($sp)
+
+	jal read_int
+	jal read_float
+
+	lw $ra ($sp)
+	addu $sp $sp 4
+
+	# Almacenamos valores
+	lw $t0 numEntero
+	l.s $f0 numFloat
+
+	# Pasamos el entero a float
+	mtc1 $t0 $f1
+	cvt.s.w $f1 $f1 
+
+	jr $ra 
+
 suma:
-    # Llamamos a la función que carga los valores
-    jal carga_valores
+	# Llamamos a la función que carga los valores
+	jal carga_valores
 
-    # Sumamos los dos floats
-    add.s $f2 $f0 $f1
+	# Sumamos los dos floats
+	add.s $f2 $f0 $f1
 
-    # Almacenamos el resultado en la dirección de memoria resultado
-    mfc1 $t1 $f2
-    sw $t1 resultado
+	# Almacenamos el resultado en la dirección de memoria resultado 
+      s.s $f2 resultado
 
-    # Imprimimos el resultado
-    jal mostrar_resultado
-    j menu
+	# Imprimimos el resultado
+	j mostrar_resultado_float
 
 resta:
 	# Llamamos a la función que carga los valores
@@ -204,7 +212,7 @@ mostrar_error:
 	#TO-DO Mostrar el mensaje de error de forma temporal
 	j menu
 
-mostrar_resultado:
+mostrar_resultado_int:
     la $a0 mensajeResultado
     li $v0 4
     syscall
@@ -212,7 +220,16 @@ mostrar_resultado:
     li $v0 1
     syscall
     jr $ra
-	
+
+mostrar_resultado_float:
+	la $a0 mensajeResultado
+	li $v0 4
+	syscall
+	l.s $f12 resultado
+	li $v0 2
+	syscall
+	j fin
+
 end_Menu:
     #Mostramos el mensaje de fin de programa
     la $a0 comment

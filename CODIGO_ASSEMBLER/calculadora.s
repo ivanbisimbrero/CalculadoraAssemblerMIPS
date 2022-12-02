@@ -71,6 +71,7 @@ menu:
     beq $t7 'F' fibonacci
     j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
+    #Funcion que lee el valor entero
 read_int:
     la $a0 mensajeEntero
     li $v0 4
@@ -80,43 +81,42 @@ read_int:
     sw $v0 numEntero
     jr $ra
 
-read_float: 
+    #Funcion que lee el valor float
+read_float:
     la $a0 mensajeFloat
     li $v0 4
     syscall
     li $v0 6
     syscall
-    sw $v0 numFloat
     jr $ra
 
+    #Funcion para que cargue los valores
 carga_valores:
-	# Leemos los valores
-	jal read_int
-	jal read_float
-
-	# Almacenamos valores
-	lw $t0 numEntero
-	l.s $f0 numFloat
-
-	# Pasamos el entero a float
-	mtc1 $t0 $f1
-	cvt.s.w $f1 $f1 
-
-	jr $ra
-
+    # Leemos los valores
+    sw $ra ($sp)
+    jal read_int
+    jal read_float
+    lw $ra ($sp)
+    # Almacenamos valores
+    lw $t0 numEntero
+    # Pasamos el entero a float
+    mtc1 $t0 $f1
+    cvt.s.w $f1 $f1
+    jr $ra
 suma:
-	# Llamamos a la función que carga los valores
-	jal carga_valores
+    # Llamamos a la función que carga los valores
+    jal carga_valores
 
-	# Sumamos los dos floats
-	add.s $f2 $f0 $f1
+    # Sumamos los dos floats
+    add.s $f2 $f0 $f1
 
-	# Almacenamos el resultado en la dirección de memoria resultado 
+    # Almacenamos el resultado en la dirección de memoria resultado
     mfc1 $t1 $f2
     sw $t1 resultado
 
-	# Imprimimos el resultado
-	j mostrar_resultado
+    # Imprimimos el resultado
+    jal mostrar_resultado
+    j menu
 
 resta:
 	# Llamamos a la función que carga los valores
@@ -205,13 +205,13 @@ mostrar_error:
 	j menu
 
 mostrar_resultado:
-	la $a0 mensajeResultado
-	li $v0 4
-	syscall
-	lw $a0 resultado
-	li $v0 1
-	syscall
-	j menu
+    la $a0 mensajeResultado
+    li $v0 4
+    syscall
+    lw $a0 resultado
+    li $v0 1
+    syscall
+    jr $ra
 	
 end_Menu:
     #Mostramos el mensaje de fin de programa

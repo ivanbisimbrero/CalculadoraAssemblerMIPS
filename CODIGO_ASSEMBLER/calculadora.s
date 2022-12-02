@@ -1,12 +1,13 @@
-	.data 
+    .data
 # Reservamos el buffer del usuario
 buffer: .space 10
+.align 4
 # no tenemos que utilizar la función .align ya que el total de bytes utilizado para guardar los chars es de 8 bytes y la siguiente dirección en la que se guarda el próximo dato es múltiplo de 4
 
-# colocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado 
+# colocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado
 numEntero: .space 4
 numFloat: .space 4
-resultado: .space 8
+resultado: .space 4
 
 # cargar el mensaje que se muestra cuando se imprime el menú
 mensajeMenu: .asciiz "Programa CALCULADORA\n
@@ -18,14 +19,19 @@ Pulse la inicial para seleccionar operación:\n
 <F>ibonaci\n
 \n
 > "
+.align 4
 
 # cargar los mensajes para leer el entero, el real, mensaje que se muestra para el resultado y mensaje que se muestra para cuando se introduce un dato erróneo
 mensajeEntero: .asciiz "Introduzca un valor entero: "
+.align 4
 mensajeFloat: .asciiz "Introduzca un valor real: "
+.align 4
 mensajeResultado: .asciiz "El resultado es: "
+.align 4
 mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO"
+.align 4
 comment:.asciiz "FIN DE PROGRAMA\n"
-
+.align 4
 	.text
 	.globl main
 main:

@@ -93,13 +93,14 @@ read_float:
     #Funcion para que cargue los valores
 carga_valores:
 	# Leemos los valores
-	#Metemos en la pila la direccion de memoria de esta funcion
+	#PROLOGO
 	subu $sp $sp 4
 	sw $ra ($sp)
 
 	jal read_int
 	jal read_float
 
+	#EPILOGO
 	lw $ra ($sp)
 	addu $sp $sp 4
 

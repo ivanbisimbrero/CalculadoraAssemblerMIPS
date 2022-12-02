@@ -10,7 +10,7 @@ numFloat: .space 4
 resultado: .space 4
 
 # cargar el mensaje que se muestra cuando se imprime el menú
-mensajeMenu: .asciiz "Programa CALCULADORA\n
+mensajeMenu: .asciiz "\nPrograma CALCULADORA\n
 Pulse la inicial para seleccionar operación:\n
 <S>uma\n
 <R>esta\n

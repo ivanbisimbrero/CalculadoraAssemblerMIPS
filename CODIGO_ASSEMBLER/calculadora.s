@@ -160,48 +160,43 @@ division:
 	# Imprimimos el resultado
 	j mostrar_resultado
 
+# INICIO DE FIBONACCI
 fibonacci:
-	lw $t0 numEntero
-	ble $t0 0 menu
-	jal fibo
-	sw $v0 resultado
-	j mostrar_resultado
 
-fibo_start:
-	subu $sp $sp 8
-	sw $ra ($sp)
-	sw $s6 4($sp)
-	
-	move $v0 $t0
-	ble $t0 0 mostrar_error # si es <=0 muestra un error
-	ble $t0 2 fibo_end # si es 1||2 carga un 1 como resultado y muestra el resultado
-	
-	# obtenemos n-1
-	move $s6 $t0 # en el caso de que fuera un 2 se muestra como resultado un 2
-	subu $t0 $t0 1
-	jal fibo_start
-	
-	# obtenemos n-2
-	move $t0 $s6 
-	subu $t0 $t0 2
-	move $s6 $v0
-	jal fibo_start
-	
-	# (n-1)+(n-2)
-	add $v0 $v0 $s6 
-	j mostrar_resultado
-	
-fibo_end:
-	lw $ra ($sp)
-	lw $s6 4($sp)
-	addu $sp $sp 8
-	jr $ra
+# Inicio del prólogo
+subu $sp, $sp, 24
+sw $ra, 20($sp)
+sw $s0, 16($sp)
+sw $s1, 12($sp)
+# Fin del prólogo
+
+move $s0, $a0 # movemos el dato introducido por el usuario al registro $s0 o el valor de la primera llamada recursiva
+li $v0, 1 # cargamos un 1 en $v0 como resultado en los casos que n=1, n=2
+ble $s0, 2, fibonacciFin # si los valores introducidos son n=1 o n=2 entonces se salta al final de fibonacci
+subu $a0, $s0, 1 # primer argumento en la suma de la secuencia de fibonacci (n-1), siendo n=$s0
+jal fibonacci # hacemos una llamada recursiva a fibonacci hasta que $a0=1 ó $a0=2
+move $s1, $v0 # almacenamos el valor de $v0 en $s1
+subu $a0, $s0, 2 # segundo argumento en la suma de la secuencia de fibonacci (n-1), siendo n=$s0
+jal fibonacci # hacemos una llamada recursiva a fibonacci hasta que $a0=1 ó $a0=2
+add $v0, $s1, $v0 # sumamos los valores de fibonacci(n-1) y fibonacci(n-2)
+
+# Fin de la secuencia de Fibonacci
+fibonacciFin:
+
+# Inicio del epílogo
+lw $ra, 20($sp)
+lw $s0, 16($sp)
+lw $s1, 12($sp)
+addu $sp, $sp, 24
+jr $ra
+# Fin del epílogo
+
+# FIN DE FIBONACCI
 
 mostrar_error:
 	la $a0 mensajeError
 	li $v0 4
 	syscall
-	#TO-DO Mostrar el mensaje de error de forma temporal
 	j menu
 
 mostrar_resultado:

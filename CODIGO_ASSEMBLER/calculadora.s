@@ -88,11 +88,11 @@ read_float:
     syscall
     li $v0 6
     syscall
+    s.s $f0 numFloat
     jr $ra
 
     #Funcion para que cargue los valores
 carga_valores:
-	# Leemos los valores
 	#PROLOGO
 	subu $sp $sp 4
 	sw $ra ($sp)
@@ -104,7 +104,7 @@ carga_valores:
 	lw $ra ($sp)
 	addu $sp $sp 4
 
-	# Almacenamos valores
+	# Leemos valores
 	lw $t0 numEntero
 	l.s $f0 numFloat
 
@@ -220,7 +220,7 @@ mostrar_resultado_int:
     lw $a0 resultado
     li $v0 1
     syscall
-    jr $ra
+    j menu
 
 mostrar_resultado_float:
 	la $a0 mensajeResultado
@@ -229,14 +229,14 @@ mostrar_resultado_float:
 	l.s $f12 resultado
 	li $v0 2
 	syscall
-	j fin
+	j menu
 
 end_Menu:
     #Mostramos el mensaje de fin de programa
     la $a0 comment
     li $v0 4
     syscall
-	jr $ra # volver a la tercera rutina de la etiqueta main       
+	jr $ra     #Salimos de menu y volvemos al main 
                      
 fin:	
 	li $v0 10

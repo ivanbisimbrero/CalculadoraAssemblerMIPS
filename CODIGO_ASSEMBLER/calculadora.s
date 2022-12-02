@@ -30,8 +30,8 @@ comment:.asciiz "FIN DE PROGRAMA\n"
 	.globl main
 main:
     # Cargamos los distintos valores para
-	# Epilogo
-	sub $sp, $sp, 24 
+	# Prologo
+	subu $sp, $sp, 24 
 	sw $ra, 4($sp) 
 	sw $a0, 20($sp)
 
@@ -39,10 +39,10 @@ main:
 	jal menu
 	j fin
 
-	# Prologo
+	# Epilogo
 	lw $ra, 4($sp) 
 	lw $a0, 20($sp) 
-	add $sp, $sp, 24
+	addu $sp, $sp, 24
 
 	
 menu:  

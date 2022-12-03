@@ -41,11 +41,8 @@ main:
     sw $ra ($sp)
     # Llamamos a la rutina menu para empezar a mostrar la pantalla del menú
     jal menu
-
-    # Epilogo
+    # cuando
     j fin
-
-
 
 menu:
     # Imprimimos por pantalla las opciones
@@ -65,6 +62,7 @@ menu:
     beq $t7 'P' producto
     beq $t7 'D' division
     beq $t7 'F' carga_valores_fibonacci
+    jal mostrar_error
     j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
     #Funcion que lee el valor entero
@@ -192,7 +190,7 @@ carga_valores_fibonacci:
 fibonacci:
 
     # Inicio del prólogo
-    subu $sp $sp 8
+    subu $sp $sp 4
     sw $ra ($sp)
     
     # subu $sp, $sp, 24
@@ -254,7 +252,8 @@ end_Menu:
     la $a0 comment
     li $v0 4
     syscall
-    jr $ra     #Salimos de menu y volvemos al main
+    lw $ra ($sp)
+    jr $ra    #Salimos de menu y volvemos al main
                  
 fin:
     li $v0 10

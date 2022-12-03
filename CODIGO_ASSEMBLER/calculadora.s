@@ -37,13 +37,12 @@ comment:.asciiz "FIN DE PROGRAMA\n"
 main:
     # Cargamos los distintos valores para
     # Prologo
-    subu $sp, $sp, 24
-
+    subu $sp, $sp, 4
+    sw $ra ($sp)
     # Llamamos a la rutina menu para empezar a mostrar la pantalla del menú
     jal menu
 
     # Epilogo
-    addu $sp, $sp, 24
     j fin
 
 

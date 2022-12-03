@@ -65,7 +65,7 @@ menu:
     beq $t7 'R' resta
     beq $t7 'P' producto
     beq $t7 'D' division
-    beq $t7 'F' fibonacci
+    beq $t7 'F' carga_valores_fibonacci
     j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
     #Funcion que lee el valor entero
@@ -178,7 +178,18 @@ division:
     # Imprimimos el resultado
     j mostrar_resultado_float
 
-# INICIO DE FIBONACCI
+carga_valores_fibonacci:
+    subu $sp $sp 8
+    sw $ra ($sp) # Guardamos en la pila la direccion de menu para no perder su referencia 
+
+    jal read_int
+
+    lw $ra ($sp)
+    addu $sp $sp 8
+
+    j fibonacci
+
+# INICIO DEL ALGORITMO DE FIBONACCI
 fibonacci:
 
     # Inicio del prólogo
@@ -205,7 +216,7 @@ fibonacciFin:
     lw $s0, 16($sp)
     lw $s1, 12($sp)
     addu $sp, $sp, 24
-    j menu
+    j mostrar_resultado_int #Mostramos el resultado
     # Fin del epílogo
 
 # FIN DE FIBONACCI
@@ -220,7 +231,7 @@ mostrar_resultado_int:
 la $a0 mensajeResultado
 li $v0 4
 syscall
-lw $a0 resultado
+move $a0 $v0 # almacenamos el valor de $v0 en $a0
 li $v0 1
 syscall
 j menu

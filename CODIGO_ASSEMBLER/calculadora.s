@@ -65,30 +65,31 @@ menu:
     jal mostrar_error
     j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
+#CASOS 
 case_suma:
     jal carga_valores
     jal suma
-    j menu
+    j mostrar_resultado_float
 
 case_resta:
     jal carga_valores
     jal resta
-    j menu
+    j mostrar_resultado_float
 
 case_producto:
     jal carga_valores
     jal producto
-    j menu
+    j mostrar_resultado_float
 
 case_division:
     jal carga_valores
     jal division
-    j menu
+    j mostrar_resultado_float
 
 case_fibonacci:
     jal read_int
     jal fibonacci
-    j menu
+    j mostrar_resultado_int
 
     #Función que lee el valor entero
 read_int:
@@ -134,12 +135,6 @@ carga_valores:
     jr $ra
 
 suma:
-    #Guardamos la direccion de retorno del menu
-    subu $sp $sp 8
-    sw $ra ($sp)
-    # Llamamos a la función que carga los valores
-    jal carga_valores
-
     # Sumamos los dos floats
     add.s $f2 $f0 $f1
 
@@ -147,7 +142,7 @@ suma:
     s.s $f2 resultado
 
     # Imprimimos el resultado
-    j mostrar_resultado_float
+    jr $ra
 
 resta:
     #Guardamos la direccion de retorno del menu

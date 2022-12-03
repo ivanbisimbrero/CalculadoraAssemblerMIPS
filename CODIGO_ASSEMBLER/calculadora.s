@@ -192,10 +192,13 @@ carga_valores_fibonacci:
 fibonacci:
 
     # Inicio del prólogo
-    subu $sp, $sp, 24
-    sw $ra, 20($sp)
-    sw $s0, 16($sp)
-    sw $s1, 12($sp)
+    subu $sp $sp 8
+    sw $ra ($sp)
+    
+    # subu $sp, $sp, 24
+    # sw $ra, 20($sp)
+    # sw $s0, 16($sp)
+    # sw $s1, 12($sp)
     # Fin del prólogo
 
     move $s0, $a0 # movemos el dato introducido por el usuario al registro $s0 o el valor de la primera llamada recursiva

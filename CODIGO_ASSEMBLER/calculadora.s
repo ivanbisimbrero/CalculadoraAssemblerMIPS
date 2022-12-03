@@ -145,12 +145,6 @@ suma:
     jr $ra
 
 resta:
-    #Guardamos la direccion de retorno del menu
-    subu $sp $sp 8
-    sw $ra ($sp)
-    # Llamamos a la función que carga los valores
-    jal carga_valores
-
     # Restamos los dos floats
     sub.s $f2 $f1 $f0
 
@@ -162,12 +156,6 @@ resta:
     j mostrar_resultado_float
 
 producto:
-    #Guardamos la direccion de retorno del menu
-    subu $sp $sp 8
-    sw $ra ($sp)
-    # Llamamos a la función que carga los valores
-    jal carga_valores
-
     # Multiplicamos los dos floats
     mul.s $f2 $f0 $f1
 
@@ -179,12 +167,6 @@ producto:
     j mostrar_resultado_float
 
 division:
-    #Guardamos la direccion de retorno del menu
-    subu $sp $sp 8
-    sw $ra ($sp)
-    # Llamamos a la función que carga los valores
-    jal carga_valores
-
     # Dividimos los dos floats
     div.s $f2 $f1 $f0
 

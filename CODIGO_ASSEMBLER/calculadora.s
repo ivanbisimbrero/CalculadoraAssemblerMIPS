@@ -222,38 +222,38 @@ fibonacciFin:
 # FIN DE FIBONACCI
 
 mostrar_error:
-la $a0 mensajeError
-li $v0 4
-syscall
-j menu
+    la $a0 mensajeError
+    li $v0 4
+    syscall
+    j menu
 
 mostrar_resultado_int:
-la $a0 mensajeResultado
-li $v0 4
-syscall
-move $a0 $v0 # almacenamos el valor de $v0 en $a0
-li $v0 1
-syscall
-j menu
+    la $a0 mensajeResultado
+    li $v0 4
+    syscall
+    move $a0 $v0 # almacenamos el valor de $v0 en $a0
+    li $v0 1
+    syscall
+    j menu
 
 mostrar_resultado_float:
-la $a0 mensajeResultado
-li $v0 4
-syscall
-l.s $f12 resultado
-li $v0 2
-syscall
-lw $ra ($sp)
-addu $sp $sp 8
-j menu
+    la $a0 mensajeResultado
+    li $v0 4
+    syscall
+    l.s $f12 resultado
+    li $v0 2
+    syscall
+    lw $ra ($sp)
+    addu $sp $sp 8
+    j menu
 
 end_Menu:
-#Mostramos el mensaje de fin de programa
-la $a0 comment
-li $v0 4
-syscall
-jr $ra     #Salimos de menu y volvemos al main
+    #Mostramos el mensaje de fin de programa
+    la $a0 comment
+    li $v0 4
+    syscall
+    jr $ra     #Salimos de menu y volvemos al main
                  
 fin:
-li $v0 10
-syscall
+    li $v0 10
+    syscall

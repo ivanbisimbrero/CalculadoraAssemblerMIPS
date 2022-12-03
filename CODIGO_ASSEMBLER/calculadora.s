@@ -41,6 +41,7 @@ main:
     sw $ra ($sp)
     # Llamamos a la rutina menu para empezar a mostrar la pantalla del menú
     jal menu
+
     # cuando se ejecute la función end_Menu se vuelve a esta dirección
     j fin
 
@@ -62,33 +63,63 @@ menu:
     beq $t7 'P' case_producto
     beq $t7 'D' case_division
     beq $t7 'F' case_fibonacci
-    jal mostrar_error
-    j menu # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
+    j mostrar_error # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
 #CASOS 
 case_suma:
+    
+    subu $sp $sp 4
+    sw $ra ($sp) #Guardo direccion retorno menu
+
     jal carga_valores
     jal suma
+
+    lw $ra ($sp) #Recupero direccion retorno menu
+    addu $sp $sp 4
     j mostrar_resultado_float
 
 case_resta:
+    subu $sp $sp 4
+    sw $ra ($sp) #Guardo direccion retorno menu
+
     jal carga_valores
     jal resta
+
+    lw $ra ($sp)#Recupero direccion retorno menu
+    addu $sp $sp 4
     j mostrar_resultado_float
 
 case_producto:
+    subu $sp $sp 4
+    sw $ra ($sp) #Guardo direccion retorno menu
+
     jal carga_valores
     jal producto
+
+    lw $ra ($sp)#Recupero direccion retorno menu
+    addu $sp $sp 4
     j mostrar_resultado_float
 
 case_division:
+    subu $sp $sp 4
+    sw $ra ($sp) #Guardo direccion retorno menu
+
     jal carga_valores
     jal division
+
+    lw $ra ($sp)#Recupero direccion retorno menu
+    addu $sp $sp 4
     j mostrar_resultado_float
 
 case_fibonacci:
+    subu $sp $sp 4
+    sw $ra ($sp) #Guardo direccion retorno menu
+
     jal read_int
     jal fibonacci
+
+    lw $ra ($sp)#Recupero direccion retorno menu
+    addu $sp $sp 4
     j mostrar_resultado_int
 
     #Función que lee el valor entero

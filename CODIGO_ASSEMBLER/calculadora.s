@@ -235,17 +235,6 @@ lw $v0 resultado
 #Volvemos a la direccion de retorno
 jr $ra
 
-carga_valores_fibonacci:
-subu $sp $sp 8
-sw $ra 4($sp) # Guardamos en la pila la direccion de menu para no perder su referencia
-
-jal read_int
-
-lw $ra 4($sp)
-addu $sp $sp 8
-
-jal fibonacci
-
 # INICIO DE FIBONACCI
 fibonacci:
 

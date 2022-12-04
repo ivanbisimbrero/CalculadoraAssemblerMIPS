@@ -3,10 +3,10 @@
 buffer: .space 10
 .align 4
 
-# colocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado
-numEntero: .space 4
-numFloat: .space 4
-resultado: .space 4
+# Colocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado
+#numEntero: .space 4
+#numFloat: .space 4
+#resultado: .space 4
 
 # cargar el mensaje que se muestra cuando se imprime el menú
 mensajeMenu: .asciiz "\nPrograma CALCULADORA\n
@@ -34,8 +34,7 @@ comment:.asciiz "FIN DE PROGRAMA\n"
     .text
     .globl main
 main:
-    # Cargamos los distintos valores para
-    # Prologo
+    # Prólogo
     subu $sp, $sp, 8
     sw $ra 4($sp)
     # Llamamos a la rutina menu para empezar a mostrar la pantalla del menú
@@ -154,47 +153,68 @@ carga_valores:
     jr $ra
 
 suma:
+    #Pasamos el parametro de la funcion $a0 al coprocesador ($f1)
+    mtc1 $a0 $f1
+    cvt.s.w $f1 $f1
+    #Pasamos el parametro de la funcion $a1 al coprocesador ($f0)
+    mtc1 $a1 $f0
     # Sumamos los dos floats
     add.s $f2 $f0 $f1
 
-    # Almacenamos el resultado en la dirección de memoria resultado
+    # Almacenamos el resultado en la dirección de memoria resultado y lo devolvemos en $v0
     s.s $f2 resultado
+    lw $v0 resultado
 
-    # Imprimimos el resultado
+    #Volvemos a la direccion de retorno
     jr $ra
 
 resta:
+    #Pasamos el parametro de la funcion $a0 al coprocesador ($f1)
+    mtc1 $a0 $f1
+    cvt.s.w $f1 $f1
+    #Pasamos el parametro de la funcion $a1 al coprocesador ($f0)
+    mtc1 $a1 $f0
     # Restamos los dos floats
     sub.s $f2 $f1 $f0
 
-    # Almacenamos el resultado
-    mfc1 $t1 $f2
-    sw $t1 resultado
+    # Almacenamos el resultado en la dirección de memoria resultado y lo devolvemos en $v0
+    s.s $f2 resultado
+    lw $v0 resultado
 
-    # Imprimimos el resultado
-    j mostrar_resultado_float
+    #Volvemos a la direccion de retorno
+    jr $ra
 
 producto:
+    #Pasamos el parametro de la funcion $a0 al coprocesador ($f1)
+    mtc1 $a0 $f1
+    cvt.s.w $f1 $f1
+    #Pasamos el parametro de la funcion $a1 al coprocesador ($f0)
+    mtc1 $a1 $f0
     # Multiplicamos los dos floats
     mul.s $f2 $f0 $f1
 
-    # Almacenamos el resultado en la dirección de memoria resultado
-    mfc1 $t1 $f2
-    sw $t1 resultado
+    # Almacenamos el resultado en la dirección de memoria resultado y lo devolvemos en $v0
+    s.s $f2 resultado
+    lw $v0 resultado
 
-    # Imprimimos el resultado
-    j mostrar_resultado_float
+    #Volvemos a la direccion de retorno
+    jr $ra
 
 division:
+    #Pasamos el parametro de la funcion $a0 al coprocesador ($f1)
+    mtc1 $a0 $f1
+    cvt.s.w $f1 $f1
+    #Pasamos el parametro de la funcion $a1 al coprocesador ($f0)
+    mtc1 $a1 $f0
     # Dividimos los dos floats
     div.s $f2 $f1 $f0
 
-    # Almacenamos el resultado
-    mfc1 $t1 $f2
-    sw $t1 resultado
+    # Almacenamos el resultado en la dirección de memoria resultado y lo devolvemos en $v0
+    s.s $f2 resultado
+    lw $v0 resultado
 
-    # Imprimimos el resultado
-    j mostrar_resultado_float
+    #Volvemos a la direccion de retorno
+    jr $ra
 
 mostrar_error:
     la $a0 mensajeError

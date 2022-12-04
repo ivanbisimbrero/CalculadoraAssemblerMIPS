@@ -170,7 +170,7 @@ l.s $f0 numFloat
 jr $ra
 
 suma:
-#Pasamos el parametro de la funcion $a1 al coprocesador ($f1)
+#Pasamos el parametro de la funcion $a0 al coprocesador ($f1)
 mtc1 $a0 $f1
 cvt.s.w $f1 $f1
 #Pasamos el parametro de la funcion $a1 al coprocesador ($f0)
@@ -186,7 +186,7 @@ lw $v0 resultado
 jr $ra
 
 resta:
-#Pasamos el parametro de la funcion $a1 al coprocesador ($f1)
+#Pasamos el parametro de la funcion $a0 al coprocesador ($f1)
 mtc1 $a0 $f1
 cvt.s.w $f1 $f1
 #Pasamos el parametro de la funcion $a1 al coprocesador ($f0)
@@ -202,7 +202,7 @@ lw $v0 resultado
 jr $ra
 
 producto:
-#Pasamos el parametro de la funcion $a1 al coprocesador ($f1)
+#Pasamos el parametro de la funcion $a0 al coprocesador ($f1)
 mtc1 $a0 $f1
 cvt.s.w $f1 $f1
 #Pasamos el parametro de la funcion $a1 al coprocesador ($f0)
@@ -218,7 +218,7 @@ lw $v0 resultado
 jr $ra
 
 division:
-#Pasamos el parametro de la funcion $a1 al coprocesador ($f1)
+#Pasamos el parametro de la funcion $a0 al coprocesador ($f1)
 mtc1 $a0 $f1
 cvt.s.w $f1 $f1
 #Pasamos el parametro de la funcion $a1 al coprocesador ($f0)

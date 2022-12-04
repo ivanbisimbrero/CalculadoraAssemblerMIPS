@@ -28,7 +28,7 @@ mensajeFloat: .asciiz "Introduzca un valor real: "
 .align 4
 mensajeResultado: .asciiz "El resultado es: "
 .align 4
-mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO"
+mensajeError: .asciiz "ERROR. DATO INTRODUCIDO NO VÁLIDO\n"
 .align 4
 comment:.asciiz "FIN DE PROGRAMA\n"
 .align 4
@@ -37,8 +37,8 @@ comment:.asciiz "FIN DE PROGRAMA\n"
 main:
     # Cargamos los distintos valores para
     # Prologo
-    subu $sp, $sp, 4
-    sw $ra ($sp)
+    subu $sp, $sp, 8
+    sw $ra 4($sp)
     # Llamamos a la rutina menu para empezar a mostrar la pantalla del menú
     jal menu
 
@@ -68,59 +68,49 @@ menu:
 #CASOS 
 case_suma:
     
-    subu $sp $sp 4
-    sw $ra ($sp) #Guardo direccion retorno menu
+    subu $sp $sp 8
+    sw $ra 4($sp) #Guardo direccion retorno menu
 
     jal carga_valores
     jal suma
 
-    lw $ra ($sp) #Recupero direccion retorno menu
-    addu $sp $sp 4
+    lw $ra 4($sp) #Recupero direccion retorno menu
+    addu $sp $sp 8
     j mostrar_resultado_float
 
 case_resta:
-    subu $sp $sp 4
-    sw $ra ($sp) #Guardo direccion retorno menu
+    subu $sp $sp 8
+    sw $ra 4($sp) #Guardo direccion retorno menu
 
     jal carga_valores
     jal resta
 
-    lw $ra ($sp)#Recupero direccion retorno menu
-    addu $sp $sp 4
+    lw $ra 4($sp)#Recupero direccion retorno menu
+    addu $sp $sp 8
     j mostrar_resultado_float
 
 case_producto:
-    subu $sp $sp 4
-    sw $ra ($sp) #Guardo direccion retorno menu
+    subu $sp $sp 8
+    sw $ra 4($sp) #Guardo direccion retorno menu
 
     jal carga_valores
     jal producto
 
-    lw $ra ($sp)#Recupero direccion retorno menu
-    addu $sp $sp 4
+    lw $ra 4($sp)#Recupero direccion retorno menu
+    addu $sp $sp 8
     j mostrar_resultado_float
 
 case_division:
-    subu $sp $sp 4
-    sw $ra ($sp) #Guardo direccion retorno menu
+    subu $sp $sp 8
+    sw $ra 4($sp) #Guardo direccion retorno menu
 
     jal carga_valores
     jal division
 
-    lw $ra ($sp)#Recupero direccion retorno menu
-    addu $sp $sp 4
+    lw $ra 4($sp)#Recupero direccion retorno menu
+    addu $sp $sp 8
     j mostrar_resultado_float
 
-case_fibonacci:
-    subu $sp $sp 4
-    sw $ra ($sp) #Guardo direccion retorno menu
-
-    jal read_int
-    jal fibonacci
-
-    lw $ra ($sp)#Recupero direccion retorno menu
-    addu $sp $sp 4
-    j mostrar_resultado_int
 
     #Función que lee el valor entero
 read_int:
@@ -146,13 +136,13 @@ read_float:
 carga_valores:
     #PROLOGO
     subu $sp $sp 8
-    sw $ra ($sp)
+    sw $ra 4($sp)
 
     jal read_int
     jal read_float
 
     #EPILOGO
-    lw $ra ($sp)
+    lw $ra 4($sp)
     addu $sp $sp 8
 
     # Leemos valores
@@ -207,57 +197,6 @@ division:
 
     # Imprimimos el resultado
     j mostrar_resultado_float
-
-carga_valores_fibonacci:
-    subu $sp $sp 8
-    sw $ra 4($sp) # Guardamos en la pila la direccion de menu para no perder su referencia
-
-    jal read_int
-
-    lw $ra 4($sp)
-    addu $sp $sp 8
-
-    jal fibonacci
-
-# INICIO DEL ALGORITMO DE FIBONACCI
-fibonacci:
-
-    # Inicio del prólogo
-    subu $sp $sp 24
-    sw $ra 4($sp)
-    sw $s0 16($sp)
-    sw $s1 12($sp)
-    # subu $sp, $sp, 24
-    # sw $ra, 20($sp)
-    # sw $s0, 16($sp)
-    # sw $s1, 12($sp)
-    # Fin del prólogo
-
-    move $s0, $a0 # movemos el dato introducido por el usuario al registro $s0 o el valor de la primera llamada recursiva
-    li $v0 1 # cargamos un 1 en $v0 como resultado en los casos que n=1, n=2
-    ble $s0 2 fibonacciFin # si los valores introducidos son n=1 o n=2 entonces se salta al final de fibonacci
-    subu $a0, $s0, 1 # primer argumento en la suma de la secuencia de fibonacci (n-1), siendo n=$s0
-    jal fibonacci # hacemos una llamada recursiva a fibonacci hasta que $a0=1 ó $a0=2
-    move $s1, $v0 # almacenamos el valor de $v0 en $s1
-    subu $a0, $s0, 2 # segundo argumento en la suma de la secuencia de fibonacci (n-1), siendo n=$s0
-    jal fibonacci # hacemos una llamada recursiva a fibonacci hasta que $a0=1 ó $a0=2
-    add $v0, $s1, $v0 # sumamos los valores de fibonacci(n-1) y fibonacci(n-2)
-    # Fin de la secuencia de Fibonacci
-fibonacciFin:
-
-    # Inicio del epílogo
-    lw $s1 12($sp)
-    lw $s0 16($sp)
-    lw $ra 4($sp)
-    addu $sp $sp 24
-    # lw $ra, 20($sp)
-    # lw $s0, 16($sp)
-    #lw $s1, 12($sp)
-    # addu $sp, $sp, 24
-    j mostrar_resultado_int #Mostramos el resultado
-    # Fin del epílogo
-
-# FIN DE FIBONACCI
 
 mostrar_error:
     la $a0 mensajeError

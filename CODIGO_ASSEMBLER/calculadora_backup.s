@@ -3,9 +3,9 @@
 # Reservamos el buffer del usuario
 buffer: .space 10
 .align 4
-# no tenemos que utilizar la función .align ya que el total de bytes utilizado para guardar los chars es de 8 bytes y la siguiente dirección en la que se guarda el próximo dato es múltiplo de 4
+# Utilizamos la función .align ya que el total de bytes utilizado para guardar el buffer de entrada es de 10 bytes y la siguiente dirección en la que se guarda el próximo dato no es múltiplo de 4. Este mismo proceso lo seguiremos para los mensajes mostrados por pantalla
 
-# colocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado
+# colocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 4 bytes para el float resultado
 numEntero: .space 4
 numFloat: .space 4
 resultado: .space 4
@@ -17,12 +17,12 @@ Pulse la inicial para seleccionar operación:\n
 <R>esta\n
 <P>roducto\n
 <D>ivisión\n
-<F>ibonaci\n
+<F>ibonacci\n
 \n
 > "
 .align 4
 
-# cargar los mensajes para leer el entero, el real, mensaje que se muestra para el resultado y mensaje que se muestra para cuando se introduce un dato erróneo
+# Cargamos los mensajes para introducir el entero y el real, mensaje que se muestra para el resultado,  mensaje que se muestra para cuando se introduce un dato erróneo y mensaje que se muestra cuando se finaliza el programa
 mensajeEntero: .asciiz "Introduzca un valor entero: "
 .align 4
 mensajeFloat: .asciiz "Introduzca un valor real: "
@@ -39,13 +39,20 @@ comment:.asciiz "FIN DE PROGRAMA\n"
 .globl main
     main:
 
-    # Prologo
-    subu $sp, $sp, 4
-    sw $ra ($sp)
+    # Prólogo
+    subu $sp, $sp, 8
+    sw $ra 4($sp)
+    # Fin del prólogo
+
     # Llamamos a la rutina menu para empezar a mostrar la pantalla del menú
     jal menu
 
-    # Cuando se ejecute la función end_Menu se vuelve a esta dirección
+    # Epílogo
+    lw $ra 4($sp)
+    addu $sp, $sp, 8
+    # Fin del epílog
+    
+    # Cuando se ejecute la función con etiqueta 'end_Menu' se vuelve a esta dirección
     j fin
 
 # Función que muestra el menú
@@ -54,72 +61,78 @@ menu:
     la $a0 mensajeMenu
     li $v0 4
     syscall
-    #Leemos el caracter introducido por el usuario
+    # Leemos el carácter introducido por el usuario
     la $a0 buffer
     li $a1 5
     li $v0 8
     syscall
     lb $t7 buffer
-    # Comparar el valor del caracter introducido por el usuario
+    # Comparamos el valor del carácter introducido por el usuario
     beq $t7 '.' end_Menu
     beq $t7 'S' case_suma
     beq $t7 'R' case_resta
     beq $t7 'P' case_producto
     beq $t7 'D' case_division
     beq $t7 'F' case_fibonacci
-    j mostrar_error # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
+    j mostrar_error # Si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
 #CASOS: SUMA, RESTA, PRODUCTO, DIVISIÓN Y SECUENCIA DE FIBONACCI
 
 # CASO 'S'
-case_suma:
-
-    subu $sp $sp 8
-    sw $ra ($sp) #Guardo direccion retorno menu
-
+case_suma: # RUTINA TERMINAL
+    
+    # Cargamos los valores
     jal carga_valores
+    
+    # Los guardamos como argumentos de entrada ($a0,$a1) para la función 'suma'
     lw $a0 numEntero
     lw $a1 numFloat
-    jal suma
 
-    lw $ra ($sp) #Recupero direccion retorno menu
-    addu $sp $sp 8
+    # Realizamos la suma
+    jal suma
+    
+    # Mostramos el resultado por pantalla
     j mostrar_resultado_float
 
 # CASO 'R'
-case_resta:
-    subu $sp $sp 8
-    sw $ra ($sp) #Guardo direccion retorno menu
-
+case_resta: # RUTINA TERMINAL
+    
+    # Cargamos los valores
     jal carga_valores
+
+    # Los guardamos como argumentos de entrada ($a0,$a1) para la función 'resta'
     lw $a0 numEntero
     lw $a1 numFloat
+
+    # Realizamos la resta
     jal resta
 
-    lw $ra ($sp)#Recupero direccion retorno menu
-    addu $sp $sp 8
+    # Mostramos el resultado por pantalla
     j mostrar_resultado_float
 
 # CASO 'P'
-case_producto:
-    subu $sp $sp 8
-    sw $ra ($sp) #Guardo direccion retorno menu
-
+case_producto: # RUTINA TERMINAL
+    
+    # Cargamos los valores
     jal carga_valores
+    
+    # Los guardamos como argumentos de entrada ($a0,$a1) para la función 'producto'
     lw $a0 numEntero
     lw $a1 numFloat
+    
+    # Realizamos el producto
     jal producto
 
-    lw $ra ($sp)#Recupero direccion retorno menu
-    addu $sp $sp 8
+    # Mostramos el resultado por pantalla
     j mostrar_resultado_float
 
 # CASO 'D'
-case_division:
-    subu $sp $sp 8
-    sw $ra ($sp) #Guardo direccion retorno menu
+case_division: # RUTINA TERMINAL
 
+    # Los guardamos como argumentos de entrada para la función 'resta'
     jal carga_valores
+
+    #
     lw $a0 numEntero
     lw $a1 numFloat
     jal division
@@ -134,7 +147,7 @@ case_fibonacci:
     sw $ra ($sp) #Guardo direccion retorno menu
 
     jal read_int
-    move $a0, $v0 #Movemos el valor entero que deja en $v0 al parametro de entrada de fibonacci $a0
+    move $a0, $v0 #Movemos el valor entero que deja en $v0 al parametro de entrada de fibonacci a $a0
     jal fibonacci
     sw $v0 resultado #Guardamos el valor devuelto en resultado
 
@@ -267,12 +280,12 @@ fibonacci:
 
 fibonacciFin:
     # Inicio del epílogo
-    lw $ra, 20($sp)
-    lw $s0, 16($sp)
     lw $s1, 12($sp)
+    lw $s0, 16($sp)
+    lw $ra, 20($sp)
     addu $sp, $sp, 24
-    jr $ra
     # Fin del epílogo
+    jr $ra
 
 # FIN DE FIBONACCI
 
@@ -305,6 +318,7 @@ end_Menu:
     la $a0 comment
     li $v0 4
     syscall
+    lw $ra 4($sp)
     jr $ra    #Salimos de menu y volvemos al main
              
 fin:

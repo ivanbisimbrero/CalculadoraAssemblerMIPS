@@ -62,7 +62,6 @@ menu:
     beq $t7 'R' case_resta
     beq $t7 'P' case_producto
     beq $t7 'D' case_division
-    beq $t7 'F' case_fibonacci
     j mostrar_error # si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
 
 #CASOS 
@@ -229,6 +228,7 @@ end_Menu:
     la $a0 comment
     li $v0 4
     syscall
+    lw $ra 4($sp)
     jr $ra    #Salimos de menu y volvemos al main
                  
 fin:

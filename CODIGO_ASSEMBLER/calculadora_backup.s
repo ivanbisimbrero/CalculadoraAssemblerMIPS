@@ -22,7 +22,7 @@ Pulse la inicial para seleccionar operación:\n
 > "
 .align 4
 
-# Cargamos los mensajes para introducir el entero y el real, mensaje que se muestra para el resultado,  mensaje que se muestra para cuando se introduce un dato erróneo y mensaje que se muestra cuando se finaliza el programa
+# Cargamos los mensajes para introducir el entero y el real, mensaje que se muestra para el resultado,  mensaje que se muestra para cuando se introduce un dato erróneo y mensaje para indicar el fin del programa
 mensajeEntero: .asciiz "Introduzca un valor entero: "
 .align 4
 mensajeFloat: .asciiz "Introduzca un valor real: "
@@ -40,18 +40,18 @@ comment:.asciiz "FIN DE PROGRAMA\n"
     main:
 
     # Prólogo
-    subu $sp, $sp, 8
+    subu $sp $sp 8
     sw $ra 4($sp)
     # Fin del prólogo
 
     # Llamamos a la rutina menu para empezar a mostrar la pantalla del menú
     jal menu
-
+    
     # Epílogo
     lw $ra 4($sp)
-    addu $sp, $sp, 8
-    # Fin del epílog
-    
+    addu $sp $sp 8
+    # Fin del epílogo
+
     # Cuando se ejecute la función con etiqueta 'end_Menu' se vuelve a esta dirección
     j fin
 
@@ -74,88 +74,87 @@ menu:
     beq $t7 'P' case_producto
     beq $t7 'D' case_division
     beq $t7 'F' case_fibonacci
-    j mostrar_error # Si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
+    jal mostrar_error # Si el usuario no introduce el carácter correcto se vuelve a mostrar el menú
+    j fin
 
 #CASOS: SUMA, RESTA, PRODUCTO, DIVISIÓN Y SECUENCIA DE FIBONACCI
 
 # CASO 'S'
-case_suma: # RUTINA TERMINAL
-    
-    # Cargamos los valores
+case_suma:
+    # Llamamos a la carga de valores
     jal carga_valores
     
-    # Los guardamos como argumentos de entrada ($a0,$a1) para la función 'suma'
+    # Pasamos a como parámetros ($a0,$a1) el valor del entero y del float
     lw $a0 numEntero
     lw $a1 numFloat
 
-    # Realizamos la suma
+    # Realizamos la suma de los parámetros $a0 y $a1
     jal suma
-    
+
     # Mostramos el resultado por pantalla
     j mostrar_resultado_float
 
 # CASO 'R'
-case_resta: # RUTINA TERMINAL
-    
-    # Cargamos los valores
+case_resta:
+
+    # Llamamos a la carga de valores
     jal carga_valores
 
-    # Los guardamos como argumentos de entrada ($a0,$a1) para la función 'resta'
+    # Pasamos a como parámetros ($a0,$a1) el valor del entero y del float
     lw $a0 numEntero
     lw $a1 numFloat
 
-    # Realizamos la resta
+    # Realizamos la resta de los parámetros $a0 y $a1
     jal resta
 
     # Mostramos el resultado por pantalla
     j mostrar_resultado_float
 
 # CASO 'P'
-case_producto: # RUTINA TERMINAL
-    
-    # Cargamos los valores
+case_producto:
+
+    # Llamamos a la carga de valores
     jal carga_valores
-    
-    # Los guardamos como argumentos de entrada ($a0,$a1) para la función 'producto'
+
+    # Pasamos a como parámetros ($a0,$a1) el valor del entero y del float
     lw $a0 numEntero
     lw $a1 numFloat
     
-    # Realizamos el producto
+    # Realizamos el producto de los parámetros $a0 y $a1
     jal producto
 
     # Mostramos el resultado por pantalla
     j mostrar_resultado_float
 
 # CASO 'D'
-case_division: # RUTINA TERMINAL
+case_division:
 
-    # Los guardamos como argumentos de entrada para la función 'resta'
     jal carga_valores
-
-    #
     lw $a0 numEntero
     lw $a1 numFloat
     jal division
 
-    lw $ra ($sp)#Recupero direccion retorno menu
-    addu $sp $sp 8
     j mostrar_resultado_float
 
 # CASO 'F'
 case_fibonacci:
-    subu $sp $sp 8
-    sw $ra ($sp) #Guardo direccion retorno menu
-
+    
+    # Leemos el valor del entero
     jal read_int
-    move $a0, $v0 #Movemos el valor entero que deja en $v0 al parametro de entrada de fibonacci a $a0
+    
+    # Movemos el valor entero que deja en $v0 al parametro de entrada de fibonacci a $a0
+    move $a0, $v0
+    
+    # Obtenemos el valor en la secuencia de Fibonacci del entero introducido
     jal fibonacci
-    sw $v0 resultado #Guardamos el valor devuelto en resultado
-
-    lw $ra ($sp)#Recupero direccion retorno menu
-    addu $sp $sp 8
+    
+    #Guardamos el valor devuelto en resultado
+    sw $v0 resultado
+    
+    # Mostramos el resultado por pantalla
     j mostrar_resultado_int
 
-#Función que lee el valor entero introducido por el usuario
+# Función que lee el valor entero introducido por el usuario
 read_int:
     la $a0 mensajeEntero
     li $v0 4
@@ -175,26 +174,40 @@ read_float:
     s.s $f0 numFloat
     jr $ra
 
-#Funcion para que cargue los valores
+# Funcion para que cargue los valores
 carga_valores:
-    #PROLOGO
+    
+    # Inicio del prólogo
     subu $sp $sp 8
-    sw $ra ($sp)
+    sw $ra 4($sp)
+    # Fin del prólogo
 
     jal read_int
     jal read_float
-
-    #EPILOGO
-    lw $ra ($sp)
-    addu $sp $sp 8
-
+    
     # Almacenamos los valores
     lw $t0 numEntero
     l.s $f0 numFloat
+    
+    # Inicio del epílogo
+    lw $ra 4($sp)
+    addu $sp $sp 8
+    # Fin del epílogo
 
+    # Volvemos a la rutina 'case_<nombre_operacion>'
     jr $ra
 
-suma:
+suma: # RUTINA TERMINAL
+
+    # Inicio del prólogo
+    subu $sp $sp 24
+    sw $a0 20($sp)
+    sw $a1 16($sp)
+    s.s $f0 12($sp)
+    s.s $f1 8($sp)
+    s.s $f2 4($sp)
+    # Fin del prólogo
+
     #Pasamos el parametro de la funcion $a0 al coprocesador ($f1)
     mtc1 $a0 $f0
     cvt.s.w $f0 $f0
@@ -207,10 +220,28 @@ suma:
     s.s $f2 resultado
     lw $v0 resultado
 
+    # Inicio del epílogo
+    l.s $f2 4($sp)
+    l.s $f1 8($sp)
+    l.s $f0 12($sp)
+    lw $a1 16($sp)
+    lw $a0 20($sp)
+    addu $sp $sp 24
+    # Fin del epílogo
+
     #Volvemos a la direccion de retorno
     jr $ra
 
-resta:
+resta: # RUTINA TERMINAL
+    # Inicio del prólogo
+    subu $sp $sp 24
+    sw $a0 20($sp)
+    sw $a1 16($sp)
+    s.s $f0 12($sp)
+    s.s $f1 8($sp)
+    s.s $f2 4($sp)
+    # Fin del prólogo
+
     # Pasamos el parámetro de la funcion $a0 al coprocesador ($f1)
     mtc1 $a0 $f1
     cvt.s.w $f1 $f1
@@ -223,10 +254,29 @@ resta:
     s.s $f2 resultado
     lw $v0 resultado
 
+    # Inicio del epílogo
+    l.s $f2 4($sp)
+    l.s $f1 8($sp)
+    l.s $f0 12($sp)
+    lw $a1 16($sp)
+    lw $a0 20($sp)
+    addu $sp $sp 24
+    # Fin del epílogo
+
     #Volvemos a la direccion de retorno
     jr $ra
 
-producto:
+producto: # RUTINA TERMINAL
+
+    # Inicio del prólogo
+    subu $sp $sp 24
+    sw $a0 20($sp)
+    sw $a1 16($sp)
+    s.s $f0 12($sp)
+    s.s $f1 8($sp)
+    s.s $f2 4($sp)
+    # Fin del prólogo
+    
     # Pasamos el parametro de la función $a0 al coprocesador ($f1)
     mtc1 $a0 $f1
     cvt.s.w $f1 $f1
@@ -239,10 +289,28 @@ producto:
     s.s $f2 resultado
     lw $v0 resultado
 
+    # Inicio del epílogo
+    l.s $f2 4($sp)
+    l.s $f1 8($sp)
+    l.s $f0 12($sp)
+    lw $a1 16($sp)
+    lw $a0 20($sp)
+    addu $sp $sp 24
+    # Fin del epílogo
+
     #Volvemos a la direccion de retorno
     jr $ra
 
-division:
+division: # RUTINA TERMINAL
+
+    # Inicio del prólogo
+    subu $sp $sp 24
+    sw $a0 20($sp)
+    sw $a1 16($sp)
+    s.s $f0 12($sp)
+    s.s $f1 8($sp)
+    # Fin del prólogo
+
     # Pasamos el parámetro de la función $a0 al coprocesador ($f1)
     mtc1 $a0 $f1
     cvt.s.w $f1 $f1
@@ -255,11 +323,21 @@ division:
     s.s $f2 resultado
     lw $v0 resultado
 
+    # Inicio del epílogo
+    l.s $f2 4($sp)
+    l.s $f1 8($sp)
+    l.s $f0 12($sp)
+    lw $a1 16($sp)
+    lw $a0 20($sp)
+    addu $sp $sp 24
+    # Fin del epílogo
+
     # Volvemos a la dirección de retorno
     jr $ra
 
 # INICIO DE FIBONACCI
-fibonacci:
+
+fibonacci: # RUTINA NO TERMINAL
 
     # Inicio del prólogo
     subu $sp, $sp, 24
@@ -289,22 +367,25 @@ fibonacciFin:
 
 # FIN DE FIBONACCI
 
-mostrar_error:
+mostrar_error: # RUTINA TERMINAL
+    # Mostramos el mensaje del error
     la $a0 mensajeError
     li $v0 4
     syscall
+    
+    # Volvemos a mostrar el menú
     j menu
 
-mostrar_resultado_int:
+mostrar_resultado_int: # RUTINA TERMINAL
     la $a0 mensajeResultado
     li $v0 4
     syscall
-    lw $a0 resultado #Cargamos el resultado en $a0 para mostrarlo por pantalla
+    lw $a0 resultado # Cargamos el resultado en $a0 para mostrarlo por pantalla
     li $v0 1
     syscall
     j menu
 
-mostrar_resultado_float:
+mostrar_resultado_float: # RUTINA TERMINAL
     mtc1 $v0 $f12
     la $a0 mensajeResultado
     li $v0 4
@@ -314,12 +395,16 @@ mostrar_resultado_float:
     j menu
 
 end_Menu:
-    #Mostramos el mensaje de fin de programa
+    # Mostramos el mensaje de fin de programa
     la $a0 comment
     li $v0 4
     syscall
+    
+    # Recuperamos la memoria de retorno al main
     lw $ra 4($sp)
-    jr $ra    #Salimos de menu y volvemos al main
+    
+    # Salimos de menu y volvemos al main
+    jr $ra
              
 fin:
     li $v0 10

@@ -2,7 +2,6 @@
 # Reservamos el buffer del usuario
 buffer: .space 10
 .align 4
-# no tenemos que utilizar la función .align ya que el total de bytes utilizado para guardar los chars es de 8 bytes y la siguiente dirección en la que se guarda el próximo dato es múltiplo de 4
 
 # colocar un espacio de 4 bytes al entero num1, 4 bytes al float num2 y 8 bytes para el double resultado
 numEntero: .space 4

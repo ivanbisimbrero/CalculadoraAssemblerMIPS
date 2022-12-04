@@ -68,7 +68,7 @@ menu:
 #CASOS
 case_suma:
 
-subu $sp $sp 4
+subu $sp $sp 8
 sw $ra ($sp) #Guardo direccion retorno menu
 
 jal carga_valores
@@ -77,11 +77,11 @@ lw $a1 numFloat
 jal suma
 
 lw $ra ($sp) #Recupero direccion retorno menu
-addu $sp $sp 4
+addu $sp $sp 8
 j mostrar_resultado_float
 
 case_resta:
-subu $sp $sp 4
+subu $sp $sp 8
 sw $ra ($sp) #Guardo direccion retorno menu
 
 jal carga_valores
@@ -90,11 +90,11 @@ lw $a1 numFloat
 jal resta
 
 lw $ra ($sp)#Recupero direccion retorno menu
-addu $sp $sp 4
+addu $sp $sp 8
 j mostrar_resultado_float
 
 case_producto:
-subu $sp $sp 4
+subu $sp $sp 8
 sw $ra ($sp) #Guardo direccion retorno menu
 
 jal carga_valores
@@ -103,11 +103,11 @@ lw $a1 numFloat
 jal producto
 
 lw $ra ($sp)#Recupero direccion retorno menu
-addu $sp $sp 4
+addu $sp $sp 8
 j mostrar_resultado_float
 
 case_division:
-subu $sp $sp 4
+subu $sp $sp 8
 sw $ra ($sp) #Guardo direccion retorno menu
 
 jal carga_valores
@@ -116,18 +116,18 @@ lw $a1 numFloat
 jal division
 
 lw $ra ($sp)#Recupero direccion retorno menu
-addu $sp $sp 4
+addu $sp $sp 8
 j mostrar_resultado_float
 
 case_fibonacci:
-subu $sp $sp 4
+subu $sp $sp 8
 sw $ra ($sp) #Guardo direccion retorno menu
 
 jal read_int
 jal fibonacci
 
 lw $ra ($sp)#Recupero direccion retorno menu
-addu $sp $sp 4
+addu $sp $sp 8
 j mostrar_resultado_int
 
 #Función que lee el valor entero
@@ -306,8 +306,6 @@ li $v0 4
 syscall
 li $v0 2
 syscall
-lw $ra ($sp)
-addu $sp $sp 8
 j menu
 
 end_Menu:
